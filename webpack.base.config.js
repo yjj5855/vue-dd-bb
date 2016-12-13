@@ -15,6 +15,7 @@ module.exports = {
     //公共库
     vendor : [
       'q',
+      'axios',
       './env', 
       'vue',
       'vue-router',

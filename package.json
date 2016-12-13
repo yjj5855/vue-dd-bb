@@ -7,6 +7,7 @@
     "dev": "rm -rf ./dd && gulp dev"
   },
   "dependencies": {
+    "axios": "^0.15.3",
     "fastclick": "^1.0.6",
     "q": "^1.4.1",
     "vue": "^1.0.24",

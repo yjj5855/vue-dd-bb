@@ -1,3 +1,4 @@
+import axios from 'axios'
 import Vue from 'vue'
 import Router from 'vue-router'
 import 'vux/dist/vux.css';
@@ -11,6 +12,19 @@ import ddPlugin from './lib/vue-dd-plugin'
 import App from './page/app/index'
 
 console.log(dd)
+
+axios.get('http://116.236.230.131:55002/auth/getConfig', {
+    params: {
+        corpid: 'ding1b56d2f4ba72e91635c2f4657eb6378f',
+        appid: '2545',
+        suitekey: 'suiteiyfdj0dfixywzqwg',
+        paramUrl: document.URL
+    }
+}).then(function (response) {
+        console.log(response);
+}).catch(function (error) {
+    console.log(error);
+});
 
 dd.config({
     agentId: '', // 必填，微应用ID
