@@ -25,7 +25,11 @@ let Index = Vue.extend({
         Alert,
     },
     ready : function(){
-        
+        this.setTitle({title:'个人'}).then((data)=>{
+            console.log(data);
+        }).catch((err)=>{
+            console.error(err)
+        })
     },
     data : ()=>{
         return {
