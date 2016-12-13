@@ -100,7 +100,7 @@ axios.get('http://116.236.230.131:55002/auth/getConfig', {
 
 
 
-// dd.ready(function(){
+dd.ready(function(){
     Vue.config.debug = true
 
     Vue.use(Router)
@@ -190,15 +190,15 @@ axios.get('http://116.236.230.131:55002/auth/getConfig', {
     sync(store, router)
     router.start(App, '#app')
 
-// });
-// dd.error(function(error){
-//     /**
-//      {
-//         message:"错误信息",//message信息会展示出钉钉服务端生成签名使用的参数，请和您生成签名的参数作对比，找出错误的参数
-//         errorCode:"错误码"
-//      }
-//      **/
-//     alert('dd error: ' + JSON.stringify(err));
-// });
+});
+dd.error(function(error){
+    /**
+     {
+        message:"错误信息",//message信息会展示出钉钉服务端生成签名使用的参数，请和您生成签名的参数作对比，找出错误的参数
+        errorCode:"错误码"
+     }
+     **/
+    alert('dd error: ' + JSON.stringify(err));
+});
 
 FastClick.attach(document.body)
