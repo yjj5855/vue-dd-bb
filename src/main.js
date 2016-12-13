@@ -11,82 +11,94 @@ import bbPlugin from './lib/vue-bb-plugin'
 import ddPlugin from './lib/vue-dd-plugin'
 import App from './page/app/index'
 
-console.log(dd)
+let dd = window.dd;
+
+
+var getParamByName = function(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]); return null;
+};
 
 axios.get('http://116.236.230.131:55002/auth/getConfig', {
     params: {
-        corpid: 'ding1b56d2f4ba72e91635c2f4657eb6378f',
-        appid: '2545',
-        suitekey: 'suiteiyfdj0dfixywzqwg',
+        corpid: getParamByName('corpid')||'ding1b56d2f4ba72e91635c2f4657eb6378f',
+        appid: getParamByName('appid')||'2545',
+        suitekey: getParamByName('suiteKey')||'suiteiyfdj0dfixywzqwg',
         paramUrl: document.URL
     }
 }).then(function (response) {
-        console.log(response);
+    if(response.status == 200 && response.data.code == 200){
+        let res = response.data.result;
+
+        dd.config({
+            agentId: res.agentId, // 必填，微应用ID
+            corpId: res.corpId,//必填，企业ID
+            timeStamp: res.timeStamp, // 必填，生成签名的时间戳
+            nonceStr: res.nonceStr, // 必填，生成签名的随机串
+            signature: res.signature, // 必填，签名
+            type:0,   //选填。0表示微应用的jsapi,1表示服务窗的jsapi。不填默认为0。该参数从dingtalk.js的0.8.3版本开始支持
+            jsApiList : [
+                'runtime.info',
+                'runtime.permission.requestAuthCode',
+
+                'biz.alipay.pay',
+                'biz.contact.choose',
+                'biz.contact.complexChoose',
+                'biz.contact.complexPicker',
+                'biz.contact.createGroup',
+                'biz.customContact.choose',
+                'biz.customContact.multipleChoose',
+                'biz.ding.post',
+                'biz.map.locate',
+                'biz.map.view',
+                'biz.util.openLink',
+                'biz.util.open',
+                'biz.util.share',
+                'biz.util.ut',
+                'biz.util.uploadImage',
+                'biz.util.previewImage',
+                'biz.util.datepicker',
+                'biz.util.timepicker',
+                'biz.util.datetimepicker',
+                'biz.util.chosen',
+                'biz.util.encrypt',
+                'biz.util.decrypt',
+                'biz.chat.pickConversation',
+                'biz.telephone.call',
+                'biz.navigation.setTitle',
+                'biz.navigation.setIcon',
+                'biz.navigation.close',
+                'biz.navigation.setRight',
+                'biz.navigation.setMenu',
+                'biz.user.get',
+
+                'ui.progressBar.setColors',
+
+                'device.base.getInterface',
+                'device.connection.getNetworkType',
+                'device.launcher.checkInstalledApps',
+                'device.launcher.launchApp',
+                'device.notification.confirm',
+                'device.notification.alert',
+                'device.notification.prompt',
+                'device.notification.showPreloader',
+                'device.notification.hidePreloader',
+                'device.notification.toast',
+                'device.notification.actionSheet',
+                'device.notification.modal',
+                'device.geolocation.get',
+
+
+            ] // 必填，需要使用的jsapi列表，注意：不要带dd。
+        });
+
+    }
 }).catch(function (error) {
     console.log(error);
 });
 
-dd.config({
-    agentId: '', // 必填，微应用ID
-    corpId: '',//必填，企业ID
-    timeStamp: '', // 必填，生成签名的时间戳
-    nonceStr: '', // 必填，生成签名的随机串
-    signature: '', // 必填，签名
-    type:0,   //选填。0表示微应用的jsapi,1表示服务窗的jsapi。不填默认为0。该参数从dingtalk.js的0.8.3版本开始支持
-    jsApiList : [
-        'runtime.info',
-        'runtime.permission.requestAuthCode',
 
-        'biz.alipay.pay',
-        'biz.contact.choose',
-        'biz.contact.complexChoose',
-        'biz.contact.complexPicker',
-        'biz.contact.createGroup',
-        'biz.customContact.choose',
-        'biz.customContact.multipleChoose',
-        'biz.ding.post',
-        'biz.map.locate',
-        'biz.map.view',
-        'biz.util.openLink',
-        'biz.util.open',
-        'biz.util.share',
-        'biz.util.ut',
-        'biz.util.uploadImage',
-        'biz.util.previewImage',
-        'biz.util.datepicker',
-        'biz.util.timepicker',
-        'biz.util.datetimepicker',
-        'biz.util.chosen',
-        'biz.util.encrypt',
-        'biz.util.decrypt',
-        'biz.chat.pickConversation',
-        'biz.telephone.call',
-        'biz.navigation.setTitle',
-        'biz.navigation.setIcon',
-        'biz.navigation.close',
-        'biz.navigation.setRight',
-        'biz.navigation.setMenu',
-        'biz.user.get',
-
-        'ui.progressBar.setColors',
-
-        'device.base.getInterface',
-        'device.connection.getNetworkType',
-        'device.launcher.checkInstalledApps',
-        'device.launcher.launchApp',
-        'device.notification.confirm',
-        'device.notification.alert',
-        'device.notification.prompt',
-        'device.notification.showPreloader',
-        'device.notification.hidePreloader',
-        'device.notification.toast',
-        'device.notification.actionSheet',
-        'device.notification.modal',
-        'device.geolocation.get',
-
-
-    ] // 必填，需要使用的jsapi列表，注意：不要带dd。
-});
 
 // dd.ready(function(){
     Vue.config.debug = true
