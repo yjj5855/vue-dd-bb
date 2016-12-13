@@ -1,0 +1,98 @@
+@color-zong : #B0A498;
+@color-org : #F78C40;
+.icon-czl-home,.icon-faxian,.icon-jifen,.icon-member{
+  width: 1.2rem;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+//.weui_tabbar_item.weui_bar_item_on{
+//  .weui_tabbar_label{
+//    color: #888;
+//  }
+//}
+.weui_tabbar_item.weui_bar_item_on {
+  background: rgba(176, 164, 152, .1);
+
+  img.icon-index{
+    content:url('http://7te93u.com1.z0.glb.clouddn.com/gj/index_on.png');
+  }
+  img.icon-wenda{
+    content:url('http://7te93u.com1.z0.glb.clouddn.com/gj/wenda_on.png');
+  }
+  img.icon-order{
+    content:url('http://7te93u.com1.z0.glb.clouddn.com/gj/order_on.png');
+  }
+  img.icon-member{
+    content:url('http://7te93u.com1.z0.glb.clouddn.com/gj/member_on.png');
+  }
+  .weui_tabbar_label{
+    color: @color-org;
+  }
+}
+
+//home
+.banner-box{
+  position: relative;
+  padding-top: 44%;
+  overflow: hidden;
+}
+.banner-btn{
+  position: absolute;
+  bottom: .5rem;
+  background: rgba(255,255,255,.7);
+  left: .5rem;
+  padding: .1rem .3rem;
+  border-radius: 2px;
+}
+.banner-img{
+  position: absolute;
+  top:0;
+}
+
+.yuyue-box{
+  padding: .5rem 0 .2rem 0;
+  background: #fff;
+}
+.yuyue-img{
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: #888;
+}
+.yuyue-text{
+  font-size: 14px;
+}
+
+.fuwu-box{
+  color: #fff;
+  background: @color-zong;
+
+  p{
+    padding: .1rem 0 .1rem .5rem;
+    font-size: 16px;
+  }
+}
+
+.ximg {
+  width: 100%;
+  height: auto;
+}
+.ximg-error {
+
+}
+.ximg-error:after {
+  content: '加载失败';
+  color: red;
+}
+
+//wenda
+.btn-tiwen{
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto;
+  font-size: .8rem;
+  font-weight: bold;
+  background: #4DAF7C;
+  border-radius: 50%;
+  color: #fff;
+}

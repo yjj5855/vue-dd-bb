@@ -1,0 +1,22 @@
+<div class="weui_tab">
+
+    <router-view v-cloak :transition="'vux-pop-' + (direction === 'forward' ? 'in' : 'out')">
+
+    </router-view>
+
+    <tabbar style="background: #fff;">
+        <tabbar-item :selected="selected('/dd/bb')" @click="goRoute('/order',this)" >
+            <img slot="icon" class="icon-order" src="http://7te93u.com1.z0.glb.clouddn.com/gj/order.png">
+            <span slot="label">班步</span>
+        </tabbar-item>
+        <tabbar-item :selected="selected('/dd')" v-link="{path:'/dd'}" >
+            <img slot="icon" class="icon-index" src="http://7te93u.com1.z0.glb.clouddn.com/gj/index.png">
+            <span slot="label">首页</span>
+        </tabbar-item>
+        <tabbar-item :selected="selected('/dd/member')" v-link="{path:'/dd/member'}">
+            <img slot="icon" class="icon-member" src="http://7te93u.com1.z0.glb.clouddn.com/gj/member.png">
+            <span slot="label">个人</span>
+        </tabbar-item>
+    </tabbar>
+
+</div>

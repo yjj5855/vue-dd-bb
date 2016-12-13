@@ -1,0 +1,14 @@
+<div class="weui_tab_bd" style="padding-top: 0;">
+    <scroller :lock-x="true" :scrollbar-y="true" :height="height" v-ref:scroller>
+        <div>
+            <div class="banner-box">
+                <img class="banner-img" src="">
+                <a class="banner-btn" @click="toast">上海</a>
+            </div>
+            <div class="tc" v-link="{path:'/dd/user/sign_in'}" style="padding: .5rem;background: #fff;">
+                签到
+            </div>
+
+        </div>
+    </scroller>
+</div>

@@ -1,0 +1,24 @@
+<div class="weui_tab_bd" style="padding-top: 0;">
+
+    <blur class="vux-center" :blur-amount=40 :url="filterAvatar">
+        <p class="vux-center"><img class="member-avatar" :src="filterAvatar"></p>
+    </blur>
+
+    <!--<group title="">-->
+        <!--<cell title="微信昵称" :value=""></cell>-->
+        <!--<cell title="手机" :value="phoneNumber" @click="showBindPhoneDialog"></cell>-->
+        <!--<cell title="邀请码" :value="$myInfo.invite_code" @click="showQrcode = true"></cell>-->
+    <!--</group>-->
+
+    <!--<group title="">-->
+        <!--<cell title="钱包" :value="''+walletMoney" @click="showWallet = true"></cell>-->
+    <!--</group>-->
+
+    <!--<popup :show.sync="showWallet" height="calc(100% - 200px)" style="overflow-y: auto;">-->
+        <!--<span class="vux-close" @click="showWallet = false" style="float: right;margin-top: .4rem;margin-right: 15px;"></span>-->
+        <!--<group title="钱包明细">-->
+            <!--<cell v-for="item in walletList" :title="item.type_name" :inline-desc="item.created_at"  :value="''+item.money"></cell>-->
+        <!--</group>-->
+    <!--</popup>-->
+
+</div>
