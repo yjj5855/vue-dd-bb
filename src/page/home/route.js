@@ -18,20 +18,23 @@ let Index = Vue.extend({
     store: store,
     vuex: {
         getters: {
-            route: (state) => state.app.route,
+            route: (state) => state.route,
             isLoading: (state) => state.app.isLoading,
             direction: (state) => state.app.direction
         }
     },
-    ready : function(){ //做浏览器判断 和 兼容
-
-    },
+    // watch: {
+    //     route: function (val, oldVal) {
+    //         console.log(val)
+    //     }
+    // },
     data : ()=>{
         return Value
     },
     methods: {
         selected(path){
-            if(this.$route.path == path){
+            console.log(this.route.path,path)
+            if(this.route.path == path){
                 return true
             }else{
                 return false
