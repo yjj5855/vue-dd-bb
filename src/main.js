@@ -12,26 +12,36 @@ import bbPlugin from './lib/vue-bb-plugin'
 import ddPlugin from './lib/vue-dd-plugin'
 import App from './page/app/index'
 
+
 let dd = window.dd;
 const commit = store.commit || store.dispatch;
 
 Vue.config.debug = true
 Vue.config.devtools = true
+Vue.component('alert',vux.Alert)
+Vue.component('loading',vux.Loading)
 
+
+let configed = false;
 getConfig().then((config)=>{
     dd.config(config);
     commit('DDCONFIG_SUCCESS', config);
 }).catch((err)=>{
     commit('DDCONFIG_ERROR', false)
-})
+}).finally(()=>{
+    configed = true;
+    initVue();
+});
 
+let ddReady = false;
 dd.ready(function(){
     console.log('初始化钉钉');
+    ddReady = true;
     initVue();
 });
 dd.error(function(error){
     commit('DDCONFIG_ERROR', false);
-    initVue();
+    alert('配置失败！')
     /**
      {
         message:"错误信息",//message信息会展示出钉钉服务端生成签名使用的参数，请和您生成签名的参数作对比，找出错误的参数
@@ -49,12 +59,14 @@ function getParamByName(name) {
     if (r != null) return unescape(r[2]); return null;
 };
 
+
 function initVue() {
+    if(!configed || !ddReady){
+        return;
+    }
     Vue.use(Router)
     Vue.use(bbPlugin)
     Vue.use(ddPlugin)
-
-    Vue.component('alert',vux.Alert)
 
     let router = new Router({
         transitionOnLoad: false

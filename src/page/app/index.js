@@ -35,7 +35,12 @@ let Index = Vue.extend({
 
     },
     computed : {
-
+        showConfigErrorDialog(){
+            return this.ddConfigStatus === false;
+        },
+        showCodeErrorDialog(){
+            return this.code === false;
+        }
     }
 })
 

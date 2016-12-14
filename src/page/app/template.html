@@ -2,10 +2,10 @@
     <router-view :transition="'vux-pop-' + (direction === 'forward' ? 'in' : 'out')">
 
     </router-view>
-    <alert :show="ddConfigStatus === false" title="发生错误">
+    <alert :show="showConfigErrorDialog" title="发生错误">
         dd.config配置失败
     </alert>
-    <alert :show="code === false" title="发生错误">
+    <alert :show="showCodeErrorDialog" title="发生错误">
         免登陆code获取失败
     </alert>
 </div>
