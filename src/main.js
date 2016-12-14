@@ -24,6 +24,9 @@ Vue.config.debug = true
 Vue.config.devtools = true
 Vue.component('alert',vux.Alert)
 Vue.component('loading',vux.Loading)
+Vue.component('group',vux.Group)
+Vue.component('x-input',vux.XInput)
+Vue.component('x-button',vux.XButton)
 
 let ddConfig = null;
 Q.Promise.all([
@@ -133,6 +136,14 @@ function initVue() {
                         let route = require('./page/user-sign-in/route').default;
                         resolve(route);
                     }, 'user-sign-in')
+                }
+            },
+            [config.BASE_PATH+'/user/bind'] : {
+                component: function (resolve) {
+                    require.ensure([], function () {
+                        let route = require('./page/user-bind-mobile/route').default;
+                        resolve(route);
+                    }, 'user-bind-mobile')
                 }
             }
         });

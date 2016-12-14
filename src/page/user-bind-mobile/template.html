@@ -1,0 +1,16 @@
+<div>
+    <div class="vux-center">为保障账号安全，请勿向他人透露账号信息</div>
+    <group>
+        <x-input placeholder="请输入手机号" keyboard="number" :value.sync="phone" :show-clear="false">
+        </x-input>
+        <x-input placeholder="请输入验证码" keyboard="number" :value.sync="verification_code" :show-clear="false">
+            <div class="vux-center-v" slot="right">
+                <x-button @click="sendSms" :disabled="sms_number>0">{{sms_text}}</x-button>
+            </div>
+        </x-input>
+    </group>
+
+    <group style="padding: 0 20px;">
+        <x-button type="primary" @click="bindPhone">绑定</x-button>
+    </group>
+</div>

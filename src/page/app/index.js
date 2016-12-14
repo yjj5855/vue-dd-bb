@@ -18,6 +18,7 @@ let Index = Vue.extend({
             ddConfig: (state) => state.app.ddConfig,
             ddConfigStatus: (state) => state.app.ddConfigStatus,
             code: (state) => state.app.code,
+            userInfo: (state) => state.app.user,
         },
         actions: {
             getRequestAuthCode
@@ -27,6 +28,11 @@ let Index = Vue.extend({
         ddConfigStatus: function (val, oldVal) {
             if(val === true){
                 this.getRequestAuthCode(this.ddConfig.corpId);
+            }
+        },
+        userInfo: function (val, oldVal) {
+            if(val && val.mobile == ''){
+                this.$router.go(this.base_path+'/user/bind')
             }
         }
     },
