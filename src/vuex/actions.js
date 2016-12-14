@@ -4,6 +4,7 @@ import axios from 'axios'
 
 export function getRequestAuthCode({ dispatch, state }, products) {
     let corpId = state.app.ddConfig.corpId;
+    console.log('corpId=>'+corpId)
     dd.runtime.permission.requestAuthCode({
         corpId : corpId,
         onSuccess : function(result) {
