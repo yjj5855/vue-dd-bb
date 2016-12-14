@@ -28,13 +28,13 @@ Vue.component('loading',vux.Loading)
 let ddConfig = null;
 Q.Promise.all([
     getConfig(),
-    ddIsReady()
+    // ddIsReady()
 ]).then(([data1,data2])=>{
     console.log(data1,data2);
     ddConfig = data1;
-    if(data2){
-        console.log('dd.ready');
-    }
+    // if(data2){
+    //     console.log('dd.ready');
+    // }
 }).catch((err)=>{
     console.log(err);
     if(err && err.errCode == -1){
@@ -43,19 +43,32 @@ Q.Promise.all([
         //请求失败
     }
 }).finally(()=>{
+    dd.config(ddConfig);
+});
+
+dd.ready(function(){
+    console.log('初始化钉钉');
+
     initVue().then(()=>{
         document.querySelector('#init-loading').remove();
         console.log('init vue 完成')
         setTimeout(()=>{
             if(ddConfig != null){
-                dd.config(ddConfig);
                 commit('DDCONFIG_SUCCESS', ddConfig)
             }else{
                 commit('DDCONFIG_ERROR', false);
             }
         },300)
-
     });
+});
+dd.error(function(err){
+    /**
+     {
+        message:"错误信息",//message信息会展示出钉钉服务端生成签名使用的参数，请和您生成签名的参数作对比，找出错误的参数
+        errorCode:"错误码"
+     }
+     **/
+    console.error('dd error: ' + JSON.stringify(err));
 });
 
 function ddIsReady() {
