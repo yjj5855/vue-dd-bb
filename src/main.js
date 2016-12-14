@@ -44,8 +44,8 @@ Q.Promise.all([
         console.log('init vue 完成')
         setTimeout(()=>{
             if(ddConfig != null){
-                dd.config(config);
-                commit('DDCONFIG_SUCCESS', config)
+                dd.config(ddConfig);
+                commit('DDCONFIG_SUCCESS', ddConfig)
             }else{
                 commit('DDCONFIG_ERROR', false);
             }
