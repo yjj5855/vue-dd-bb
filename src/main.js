@@ -77,7 +77,7 @@ function ddIsReady() {
                 onSuccess : function(result) {
                     //如果control为true，则onSuccess将在发生按钮点击事件被回调
                     console.log('点击了返回按钮');
-                    // window.history.go(-1);
+                    window.history.back();
                 },
                 onFail : function(err) {}
             });
