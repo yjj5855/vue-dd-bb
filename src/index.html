@@ -8,13 +8,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>班步</title>
-    <script src="//cdn.bootcss.com/zepto/1.2.0/zepto.min.js"></script>
-    <!--钉钉sdk-->
-    <script src="https://g.alicdn.com/dingding/open-develop/0.9.2/dingtalk.js"></script>
+
+
 </head>
 <body>
+    <div class="weui_loading_toast" id="init-loading">
+        <div class="weui_mask_transparent"></div>
+        <div class="weui_toast" style="background: none;">
+            <span class="vux-spinner vux-spinner-lines" slot="value" style="width: 100px;height: 100px;">
+                <svg viewBox="0 0 64 64" style="width: 100px;height: 100px;">
+                    <g stroke-width="7" stroke-linecap="round">
+                    <line x1="10" x2="10" y1="16.2222" y2="47.5556">
+                        <animate attributeName="y1" dur="750ms" values="16;18;28;18;16;16" repeatCount="indefinite"></animate>
+                        <animate attributeName="y2" dur="750ms" values="48;46;36;44;48;48" repeatCount="indefinite"></animate>
+                        <animate attributeName="stroke-opacity" dur="750ms" values="1;.4;.5;.8;1;1" repeatCount="indefinite"></animate>
+                    </line>
+                    <line x1="24" x2="24" y1="19.1111" y2="43.1111">
+                        <animate attributeName="y1" dur="750ms" values="16;16;18;28;18;16" repeatCount="indefinite"></animate>
+                        <animate attributeName="y2" dur="750ms" values="48;48;46;36;44;48" repeatCount="indefinite"></animate>
+                        <animate attributeName="stroke-opacity" dur="750ms" values="1;1;.4;.5;.8;1" repeatCount="indefinite"></animate>
+                    </line><line x1="38" x2="38" y1="26.8889" y2="37.1111"><animate attributeName="y1" dur="750ms" values="18;16;16;18;28;18" repeatCount="indefinite"></animate><animate attributeName="y2" dur="750ms" values="44;48;48;46;36;44" repeatCount="indefinite"></animate><animate attributeName="stroke-opacity" dur="750ms" values=".8;1;1;.4;.5;.8" repeatCount="indefinite"></animate></line><line x1="52" x2="52" y1="17.7778" y2="46.2222"><animate attributeName="y1" dur="750ms" values="28;18;16;16;18;28" repeatCount="indefinite"></animate><animate attributeName="y2" dur="750ms" values="36;44;48;48;46;36" repeatCount="indefinite"></animate><animate attributeName="stroke-opacity" dur="750ms" values=".5;.8;1;1;.4;.5" repeatCount="indefinite"></animate></line></g></svg></span>
+
+        </div>
+    </div>
     <div id="app" style="height: 100%;width: 100%;">
 
     </div>
+
+
+    <!--钉钉sdk-->
+    <script src="https://g.alicdn.com/dingding/open-develop/0.9.2/dingtalk.js"></script>
 </body>
 </html>

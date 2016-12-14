@@ -40,6 +40,7 @@ Q.Promise.all([
     }
 }).finally(()=>{
     initVue().then(()=>{
+        document.querySelector('#init-loading').remove();
         console.log('init vue 完成')
         setTimeout(()=>{
             if(ddConfig != null){
