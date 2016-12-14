@@ -28,6 +28,7 @@ let Index = Vue.extend({
     },
     methods: {
         selected(path){
+            console.log(this.route.path.substr(0,path.length),path)
             if(this.route.path.substr(0,path.length) == path){
                 return true
             }else{
