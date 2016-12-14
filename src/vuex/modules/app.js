@@ -3,7 +3,10 @@ import {
     UPDATE_DIRECTION,
     DDCONFIG_SUCCESS,
     DDCONFIG_ERROR,
-    UPDATE_CODE
+    UPDATE_CODE,
+    LOGIN_SUCCESS,
+    LOGIN_ERROR,
+    UPDATE_SYS_LEVEL
 } from '../mutation-types'
 
 const state = {
@@ -13,6 +16,9 @@ const state = {
     ddConfig: null,
     ddConfigStatus: null,
     code: null,
+
+    user: null,
+    sys_level: null
 }
 
 const mutations = {
@@ -32,7 +38,16 @@ const mutations = {
     },
     [UPDATE_CODE] (state, code) {
         state.code = code
-    }
+    },
+    [LOGIN_SUCCESS] (state, user) {
+        state.user = user
+    },
+    [LOGIN_ERROR] (state, user) {
+        state.user = false
+    },
+    [UPDATE_SYS_LEVEL] (state, sys_level) {
+        state.sys_level = sys_level
+    },
 }
 
 export default {

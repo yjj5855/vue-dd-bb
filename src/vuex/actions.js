@@ -1,5 +1,6 @@
-
 import * as mutations from './mutation-types'
+import Q from 'q'
+import axios from 'axios'
 
 export function getRequestAuthCode({ dispatch, state }, products) {
     let corpId = state.app.ddConfig.corpId;
@@ -20,5 +21,21 @@ export function getRequestAuthCode({ dispatch, state }, products) {
 }
 
 export function getUserInfo({dispatch, state}, code) {
-
+    axios.get('https://oapi.dingtalk.com/user/getuserinfo', {
+        params: {
+            access_token: 'ACCESS_TOKEN',
+            code: 'CODE'
+        },
+        timeout: 5000,
+    }).then(function (response) {
+        if(response.status == 200 && response.data.code == 200){
+            let user = response.data.result;
+            dispatch(mutations.LOGIN_SUCCESS, user);
+            dispatch(mutations.UPDATE_SYS_LEVEL, user.sys_level);
+        }else{
+            dispatch(mutations.LOGIN_ERROR,false)
+        }
+    }).catch(function (err) {
+        dispatch(mutations.LOGIN_ERROR,false)
+    });
 }
