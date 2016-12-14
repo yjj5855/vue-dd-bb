@@ -29,12 +29,12 @@ const mutations = {
         state.direction = direction
     },
     [DDCONFIG_SUCCESS] (state, config) {
-        state.ddConfigStatus = true;
         state.ddConfig = config;
+        state.ddConfigStatus = true;
     },
     [DDCONFIG_ERROR] (state, config) {
-        state.ddConfigStatus = false;
         state.ddConfig = null;
+        state.ddConfigStatus = false;
     },
     [UPDATE_CODE] (state, code) {
         state.code = code
