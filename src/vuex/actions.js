@@ -7,7 +7,9 @@ export function getRequestAuthCode({ dispatch, state }, products) {
         corpId : corpId,
         onSuccess : function(result) {
             dispatch(mutations.UPDATE_CODE,result.code)
-            getUserInfo(result.code)
+
+            getUserInfo({ dispatch, state },result.code)
+
             console.log('获取到了免登陆code=>'+result.code)
         },
         onFail : function(err) {

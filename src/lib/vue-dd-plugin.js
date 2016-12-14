@@ -6,19 +6,6 @@ ddPlugin.install = function (Vue, option) {
     var dd = window.dd;
 
     if(dd){
-        Vue.prototype.getRequestAuthCode = function (data) {
-            return Q.Promise(function (success, error) {
-                dd.runtime.permission.requestAuthCode({
-                    corpId : data.corpId,
-                    onSuccess : function(result) {
-                        success(result)
-                    },
-                    onFail : function(err) {
-                        error(err)
-                    }
-                });
-            })
-        }
         Vue.prototype.setTitle = function (data) {
             return Q.Promise(function (success, error) {
                 dd.biz.navigation.setTitle({

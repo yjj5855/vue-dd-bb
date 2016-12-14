@@ -21,37 +21,61 @@ Vue.config.devtools = true
 Vue.component('alert',vux.Alert)
 Vue.component('loading',vux.Loading)
 
-
-let configed = false;
-getConfig().then((config)=>{
-    dd.config(config);
-    commit('DDCONFIG_SUCCESS', config);
+let ddConfig = null;
+Q.Promise.all([
+    getConfig(),
+    ddIsReady()
+]).then(([data1,data2])=>{
+    console.log(data1,data2);
+    ddConfig = data1;
+    if(data2){
+        console.log('dd.ready');
+    }
 }).catch((err)=>{
-    commit('DDCONFIG_ERROR', false)
+    console.log(err);
+    if(err && err.errCode == -1){
+        //dd.ready 失败
+    }else if(err && err.errCode == -2){
+        //请求失败
+    }
 }).finally(()=>{
-    configed = true;
-    initVue();
+    initVue().then(()=>{
+        console.log('init vue 完成')
+        setTimeout(()=>{
+            if(ddConfig != null){
+                dd.config(config);
+                commit('DDCONFIG_SUCCESS', config)
+            }else{
+                commit('DDCONFIG_ERROR', false);
+            }
+        },300)
+
+    });
 });
 
-let ddReady = false;
-dd.ready(function(){
-    console.log('初始化钉钉');
-    ddReady = true;
-    initVue();
-});
-dd.error(function(error){
-    commit('DDCONFIG_ERROR', false);
-    alert('配置失败！')
-    /**
-     {
-        message:"错误信息",//message信息会展示出钉钉服务端生成签名使用的参数，请和您生成签名的参数作对比，找出错误的参数
-        errorCode:"错误码"
-     }
-     **/
-    console.error('dd error: ' + JSON.stringify(err));
-});
-
-
+function ddIsReady() {
+    return Q.Promise((success, error)=>{
+        let timeout = setTimeout(()=>{
+            error({errCode:-1,msg:'dd.ready初始化超时'});
+        },2000)
+        dd.ready(function(){
+            console.log('初始化钉钉');
+            clearTimeout(timeout)
+            success(true)
+        });
+        dd.error(function(err){
+            clearTimeout(timeout)
+            /**
+             {
+                message:"错误信息",//message信息会展示出钉钉服务端生成签名使用的参数，请和您生成签名的参数作对比，找出错误的参数
+                errorCode:"错误码"
+             }
+             **/
+            console.error('dd error: ' + JSON.stringify(err));
+            error({errCode:-1,msg:'dd.error配置信息不对'})
+        });
+    })
+}
 
 function getParamByName(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
@@ -61,93 +85,95 @@ function getParamByName(name) {
 
 
 function initVue() {
-    if(!configed || !ddReady){
-        return;
-    }
-    Vue.use(Router)
-    Vue.use(bbPlugin)
-    Vue.use(ddPlugin)
+    return Q.Promise((success, error)=>{
 
-    let router = new Router({
-        transitionOnLoad: false
-    })
-    router.map({
-        [config.BASE_PATH] : {
-            component: function(resolve){
-                require.ensure([], function() {
-                    let route = require('./page/home/route').default;
-                    resolve(route);
-                },'home')
+        Vue.use(Router)
+        Vue.use(bbPlugin)
+        Vue.use(ddPlugin)
+
+        let router = new Router({
+            transitionOnLoad: false
+        })
+        router.map({
+            [config.BASE_PATH] : {
+                component: function(resolve){
+                    require.ensure([], function() {
+                        let route = require('./page/home/route').default;
+                        resolve(route);
+                    },'home')
+                },
+                subRoutes: {
+                    '/': {
+                        component: function (resolve) {
+                            require.ensure([], function () {
+                                let route = require('./page/home/index/route').default;
+                                resolve(route);
+                            },'index')
+                        }
+                    },
+                    '/member' : {
+                        component: function(resolve){
+                            require.ensure([], function() {
+                                let route = require('./page/home/member/route').default;
+                                resolve(route);
+                            },'member')
+                        }
+                    },
+                    // '/wenda' : {
+                    //     component: function(resolve){
+                    //         require.ensure([], function() {
+                    //             let route = require('./states/index/wenda/route').default;
+                    //             resolve(route);
+                    //         },'wenda')
+                    //     }
+                    // },
+                }
             },
-            subRoutes: {
-                '/': {
-                    component: function (resolve) {
-                        require.ensure([], function () {
-                            let route = require('./page/home/index/route').default;
-                            resolve(route);
-                        },'index')
-                    }
-                },
-                '/member' : {
-                    component: function(resolve){
-                        require.ensure([], function() {
-                            let route = require('./page/home/member/route').default;
-                            resolve(route);
-                        },'member')
-                    }
-                },
-                // '/wenda' : {
-                //     component: function(resolve){
-                //         require.ensure([], function() {
-                //             let route = require('./states/index/wenda/route').default;
-                //             resolve(route);
-                //         },'wenda')
-                //     }
-                // },
+            [config.BASE_PATH+'/user/sign_in'] : {
+                component: function (resolve) {
+                    require.ensure([], function () {
+                        let route = require('./page/user-sign-in/route').default;
+                        resolve(route);
+                    }, 'user-sign-in')
+                }
             }
-        },
-        [config.BASE_PATH+'/user/sign_in'] : {
-            component: function (resolve) {
-                require.ensure([], function () {
-                    let route = require('./page/user-sign-in/route').default;
-                    resolve(route);
-                }, 'user-sign-in')
-            }
-        }
-    });
-    router.redirect({
-        '*': config.BASE_PATH
-    });
-    let history = window.sessionStorage
-    history.clear()
-    let historyCount = history.getItem('count') * 1 || 0
-    history.setItem(config.BASE_PATH, 0)
+        });
+        router.redirect({
+            '*': config.BASE_PATH
+        });
+        let history = window.sessionStorage
+        history.clear()
+        let historyCount = history.getItem('count') * 1 || 0
+        history.setItem('/', 0)
 
-    router.beforeEach(({ to, from, next }) => {
-        const toIndex = history.getItem(to.path)
-        const fromIndex = history.getItem(from.path)
-        if (toIndex) {
-            if (toIndex > fromIndex || !fromIndex) {
-                commit('UPDATE_DIRECTION', 'forward')
+        router.beforeEach(({ to, from, next }) => {
+            const toIndex = history.getItem(to.path)
+            const fromIndex = history.getItem(from.path)
+            if (toIndex) {
+                if (toIndex > fromIndex || !fromIndex) {
+                    commit('UPDATE_DIRECTION', 'forward')
+                } else {
+                    commit('UPDATE_DIRECTION', 'reverse')
+                }
             } else {
-                commit('UPDATE_DIRECTION', 'reverse')
+                ++historyCount
+                history.setItem('count', historyCount)
+                to.path !== '/' && history.setItem(to.path, historyCount)
+                commit('UPDATE_DIRECTION', 'forward')
             }
-        } else {
-            ++historyCount
-            history.setItem('count', historyCount)
-            to.path !== config.BASE_PATH && history.setItem(to.path, historyCount)
-            commit('UPDATE_DIRECTION', 'forward')
-        }
-        commit('UPDATE_LOADING', true)
-        setTimeout(next, 50)
-    })
-    router.afterEach(() => {
-        commit('UPDATE_LOADING', false)
-    })
-    sync(store, router)
-    router.start(App, '#app')
+            commit('UPDATE_LOADING', true)
+            setTimeout(next, 50)
+        })
+        router.afterEach(() => {
+            commit('UPDATE_LOADING', false)
+        })
+        sync(store, router)
+        router.start(App, '#app')
 
-    FastClick.attach(document.body)
+        FastClick.attach(document.body)
+
+        success()
+    })
 }
 
 function getConfig() {
@@ -158,7 +184,8 @@ function getConfig() {
                 appid: getParamByName('appid')||'2545',
                 suitekey: getParamByName('suiteKey')||'suiteiyfdj0dfixywzqwg',
                 paramUrl: document.URL
-            }
+            },
+            timeout: 2000,
         }).then(function (response) {
             if(response.status == 200 && response.data.code == 200){
                 let res = response.data.result;
@@ -225,10 +252,10 @@ function getConfig() {
                 }
                 success(ddConfig)
             }else{
-                error(response)
+                error({errCode:-2,msg:'接口请求失败'})
             }
         }).catch(function (err) {
-            error(err)
+            error({errCode:-2,msg:'接口请求失败'})
         });
     })
 

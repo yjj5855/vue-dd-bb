@@ -13,10 +13,10 @@ let Index = Vue.extend({
     vuex: {
         getters: {
             route: (state) => state.route,
-            isLoading: (state) => state.isLoading,
-            direction: (state) => state.direction,
-            ddConfigStatus: (state) => state.ddConfigStatus,
-            code: (state) => state.code,
+            isLoading: (state) => state.app.isLoading,
+            direction: (state) => state.app.direction,
+            ddConfigStatus: (state) => state.app.ddConfigStatus,
+            code: (state) => state.app.code,
         },
         actions: {
             getRequestAuthCode
