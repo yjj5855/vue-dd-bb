@@ -19,9 +19,9 @@ let Index = Vue.extend({
     store: store,
     vuex: {
         getters: {
-            route: (state) => state.route,
-            isLoading: (state) => state.isLoading,
-            direction: (state) => state.direction
+            route: (state) => state.app.route,
+            isLoading: (state) => state.app.isLoading,
+            direction: (state) => state.app.direction
         }
     },
     ready : function(){ //做浏览器判断 和 兼容
