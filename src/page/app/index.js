@@ -26,7 +26,7 @@ let Index = Vue.extend({
     watch: {
         ddConfigStatus: function (val, oldVal) {
             if(val === true){
-                this.getRequestAuthCode(this.ddConfig.corpId);
+                this.getRequestAuthCode();
             }
         }
     },

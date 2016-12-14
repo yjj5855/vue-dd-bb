@@ -2,11 +2,11 @@ import * as mutations from './mutation-types'
 import Q from 'q'
 import axios from 'axios'
 
-export function getRequestAuthCode({ dispatch, state }, corpId) {
+export function getRequestAuthCode({ dispatch, state }) {
 
-    console.log('corpId=>'+corpId)
+    console.log('corpId=>'+state)
     dd.runtime.permission.requestAuthCode({
-        corpId : corpId,
+        corpId : state.ddConfig.corpId,
         onSuccess : function(result) {
             dispatch(mutations.UPDATE_CODE,result.code)
 
