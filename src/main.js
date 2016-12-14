@@ -1,3 +1,4 @@
+import Q from 'q'
 import axios from 'axios'
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -13,97 +14,23 @@ import App from './page/app/index'
 
 let dd = window.dd;
 const commit = store.commit || store.dispatch;
-let ddConfig = null;
 
 Vue.config.debug = true
 Vue.config.devtools = true
 
-axios.get('http://116.236.230.131:55002/auth/getConfig', {
-    params: {
-        corpid: getParamByName('corpid')||'ding1b56d2f4ba72e91635c2f4657eb6378f',
-        appid: getParamByName('appid')||'2545',
-        suitekey: getParamByName('suiteKey')||'suiteiyfdj0dfixywzqwg',
-        paramUrl: document.URL
-    }
-}).then(function (response) {
-    if(response.status == 200 && response.data.code == 200){
-        let res = response.data.result;
-        ddConfig = {
-            agentId: res.agentId, // 必填，微应用ID
-            corpId: res.corpId,//必填，企业ID
-            timeStamp: res.timeStamp, // 必填，生成签名的时间戳
-            nonceStr: res.nonceStr, // 必填，生成签名的随机串
-            signature: res.signature, // 必填，签名
-            type:0,   //选填。0表示微应用的jsapi,1表示服务窗的jsapi。不填默认为0。该参数从dingtalk.js的0.8.3版本开始支持
-            jsApiList : [
-                'runtime.info',
-                'runtime.permission.requestAuthCode',
-
-                'biz.alipay.pay',
-                'biz.contact.choose',
-                'biz.contact.complexChoose',
-                'biz.contact.complexPicker',
-                'biz.contact.createGroup',
-                'biz.customContact.choose',
-                'biz.customContact.multipleChoose',
-                'biz.ding.post',
-                'biz.map.locate',
-                'biz.map.view',
-                'biz.util.openLink',
-                'biz.util.open',
-                'biz.util.share',
-                // 'biz.util.ut',
-                'biz.util.uploadImage',
-                'biz.util.previewImage',
-                'biz.util.datepicker',
-                'biz.util.timepicker',
-                'biz.util.datetimepicker',
-                'biz.util.chosen',
-                'biz.util.encrypt',
-                'biz.util.decrypt',
-                'biz.chat.pickConversation',
-                'biz.telephone.call',
-                'biz.navigation.setTitle',
-                'biz.navigation.setIcon',
-                'biz.navigation.close',
-                'biz.navigation.setRight',
-                'biz.navigation.setMenu',
-                'biz.user.get',
-
-                'ui.progressBar.setColors',
-
-                'device.base.getInterface',
-                'device.connection.getNetworkType',
-                'device.launcher.checkInstalledApps',
-                'device.launcher.launchApp',
-                'device.notification.confirm',
-                'device.notification.alert',
-                'device.notification.prompt',
-                'device.notification.showPreloader',
-                'device.notification.hidePreloader',
-                'device.notification.toast',
-                'device.notification.actionSheet',
-                'device.notification.modal',
-                'device.geolocation.get',
-
-
-            ] // 必填，需要使用的jsapi列表，注意：不要带dd。
-        }
-        dd.config(ddConfig);
-    }else{
-        alert(JSON.stringify(response))
-    }
-}).catch(function (error) {
-    alert(JSON.stringify(response))
-});
+getConfig().then((config)=>{
+    dd.config(config);
+    commit('DDCONFIG_SUCCESS', config);
+}).catch((err)=>{
+    commit('DDCONFIG_ERROR', false)
+})
 
 dd.ready(function(){
-    console.log('初始化钉钉')
-    commit('DDCONFIG_SUCCESS', ddConfig)
+    console.log('初始化钉钉');
     initVue();
 });
 dd.error(function(error){
-    commit('DDCONFIG_ERROR', false)
+    commit('DDCONFIG_ERROR', false);
     initVue();
     /**
      {
@@ -209,4 +136,88 @@ function initVue() {
     router.start(App, '#app')
 
     FastClick.attach(document.body)
+}
+
+function getConfig() {
+    return Q.Promise((success, error)=>{
+        axios.get('http://116.236.230.131:55002/auth/getConfig', {
+            params: {
+                corpid: getParamByName('corpid')||'ding1b56d2f4ba72e91635c2f4657eb6378f',
+                appid: getParamByName('appid')||'2545',
+                suitekey: getParamByName('suiteKey')||'suiteiyfdj0dfixywzqwg',
+                paramUrl: document.URL
+            }
+        }).then(function (response) {
+            if(response.status == 200 && response.data.code == 200){
+                let res = response.data.result;
+                let ddConfig = {
+                    agentId: res.agentId, // 必填，微应用ID
+                    corpId: res.corpId,//必填，企业ID
+                    timeStamp: res.timeStamp, // 必填，生成签名的时间戳
+                    nonceStr: res.nonceStr, // 必填，生成签名的随机串
+                    signature: res.signature, // 必填，签名
+                    type:0,   //选填。0表示微应用的jsapi,1表示服务窗的jsapi。不填默认为0。该参数从dingtalk.js的0.8.3版本开始支持
+                    jsApiList : [
+                        'runtime.info',
+                        'runtime.permission.requestAuthCode',
+
+                        'biz.alipay.pay',
+                        'biz.contact.choose',
+                        'biz.contact.complexChoose',
+                        'biz.contact.complexPicker',
+                        'biz.contact.createGroup',
+                        'biz.customContact.choose',
+                        'biz.customContact.multipleChoose',
+                        'biz.ding.post',
+                        'biz.map.locate',
+                        'biz.map.view',
+                        'biz.util.openLink',
+                        'biz.util.open',
+                        'biz.util.share',
+                        // 'biz.util.ut',
+                        'biz.util.uploadImage',
+                        'biz.util.previewImage',
+                        'biz.util.datepicker',
+                        'biz.util.timepicker',
+                        'biz.util.datetimepicker',
+                        'biz.util.chosen',
+                        'biz.util.encrypt',
+                        'biz.util.decrypt',
+                        'biz.chat.pickConversation',
+                        'biz.telephone.call',
+                        'biz.navigation.setTitle',
+                        'biz.navigation.setIcon',
+                        'biz.navigation.close',
+                        'biz.navigation.setRight',
+                        'biz.navigation.setMenu',
+                        'biz.user.get',
+
+                        'ui.progressBar.setColors',
+
+                        'device.base.getInterface',
+                        'device.connection.getNetworkType',
+                        'device.launcher.checkInstalledApps',
+                        'device.launcher.launchApp',
+                        'device.notification.confirm',
+                        'device.notification.alert',
+                        'device.notification.prompt',
+                        'device.notification.showPreloader',
+                        'device.notification.hidePreloader',
+                        'device.notification.toast',
+                        'device.notification.actionSheet',
+                        'device.notification.modal',
+                        'device.geolocation.get',
+
+
+                    ] // 必填，需要使用的jsapi列表，注意：不要带dd。
+                }
+                success(ddConfig)
+            }else{
+                error(response)
+            }
+        }).catch(function (err) {
+            error(err)
+        });
+    })
+
 }
