@@ -97,7 +97,6 @@ router.afterEach(() => {
     commit('UPDATE_LOADING', false)
 })
 sync(store, router)
-router.start(App, '#app')
 
 
 axios.get('http://116.236.230.131:55002/auth/getConfig', {
@@ -180,10 +179,14 @@ axios.get('http://116.236.230.131:55002/auth/getConfig', {
 });
 
 dd.ready(function(){
-    commit('DDCONFIG_SUCCESS', ddConfig)
     Vue.use(ddPlugin)
+    router.start(App, '#app')
+
+    commit('DDCONFIG_SUCCESS', ddConfig)
 });
 dd.error(function(error){
+    router.start(App, '#app')
+
     commit('DDCONFIG_ERROR', false)
     /**
      {
@@ -191,7 +194,7 @@ dd.error(function(error){
         errorCode:"错误码"
      }
      **/
-    alert('dd error: ' + JSON.stringify(err));
+    console.error('dd error: ' + JSON.stringify(err));
 });
 
 FastClick.attach(document.body)
