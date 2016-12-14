@@ -52,7 +52,7 @@ axios.get('http://116.236.230.131:55002/auth/getConfig', {
                 'biz.util.openLink',
                 'biz.util.open',
                 'biz.util.share',
-                'biz.util.ut',
+                // 'biz.util.ut',
                 'biz.util.uploadImage',
                 'biz.util.previewImage',
                 'biz.util.datepicker',
@@ -98,6 +98,7 @@ axios.get('http://116.236.230.131:55002/auth/getConfig', {
 });
 
 dd.ready(function(){
+    console.log('初始化钉钉')
     commit('DDCONFIG_SUCCESS', ddConfig)
     initVue();
 });
@@ -113,7 +114,7 @@ dd.error(function(error){
     console.error('dd error: ' + JSON.stringify(err));
 });
 
-FastClick.attach(document.body)
+
 
 function getParamByName(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
@@ -206,4 +207,6 @@ function initVue() {
     })
     sync(store, router)
     router.start(App, '#app')
+
+    FastClick.attach(document.body)
 }
