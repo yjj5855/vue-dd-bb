@@ -27,7 +27,7 @@ export function getUserInfo({dispatch, state}, code) {
         params: {
             code: code,
             corpId: state.app.ddConfig.corpId,
-            suiteKey: state.app.ddConfig.suiteKey
+            suiteKey: window.getParamByName('suiteKey')
         },
         timeout: 5000,
     }).then(function (response) {
