@@ -12,7 +12,11 @@ import bbPlugin from './lib/vue-bb-plugin'
 import ddPlugin from './lib/vue-dd-plugin'
 import App from './page/app/index'
 
-
+window.getParamByName = function(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]); return null;
+};
 let dd = window.dd;
 const commit = store.commit || store.dispatch;
 
@@ -77,13 +81,6 @@ function ddIsReady() {
         });
     })
 }
-
-window.getParamByName = function(name) {
-    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-    var r = window.location.search.substr(1).match(reg);
-    if (r != null) return unescape(r[2]); return null;
-};
-
 
 function initVue() {
     return Q.Promise((success, error)=>{
