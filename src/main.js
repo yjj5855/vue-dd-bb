@@ -2,7 +2,7 @@ import axios from 'axios'
 import Vue from 'vue'
 import Router from 'vue-router'
 import 'vux/dist/vux.css';
-// import Vux from 'vux'
+import * as vux from 'vux'
 import { sync } from 'vuex-router-sync'
 import store from './vuex/store'
 import FastClick from 'fastclick'
@@ -17,87 +17,6 @@ let ddConfig = null;
 
 Vue.config.debug = true
 Vue.config.devtools = true
-Vue.use(Router)
-Vue.use(bbPlugin)
-
-let router = new Router({
-    transitionOnLoad: false
-})
-router.map({
-    [config.BASE_PATH] : {
-        component: function(resolve){
-            require.ensure([], function() {
-                let route = require('./page/home/route').default;
-                resolve(route);
-            },'home')
-        },
-        subRoutes: {
-            '/': {
-                component: function (resolve) {
-                    require.ensure([], function () {
-                        let route = require('./page/home/index/route').default;
-                        resolve(route);
-                    },'index')
-                }
-            },
-            '/member' : {
-                component: function(resolve){
-                    require.ensure([], function() {
-                        let route = require('./page/home/member/route').default;
-                        resolve(route);
-                    },'member')
-                }
-            },
-            // '/wenda' : {
-            //     component: function(resolve){
-            //         require.ensure([], function() {
-            //             let route = require('./states/index/wenda/route').default;
-            //             resolve(route);
-            //         },'wenda')
-            //     }
-            // },
-        }
-    },
-    [config.BASE_PATH+'/user/sign_in'] : {
-        component: function (resolve) {
-            require.ensure([], function () {
-                let route = require('./page/user-sign-in/route').default;
-                resolve(route);
-            }, 'user-sign-in')
-        }
-    }
-});
-router.redirect({
-    '*': config.BASE_PATH
-});
-let history = window.sessionStorage
-history.clear()
-let historyCount = history.getItem('count') * 1 || 0
-history.setItem(config.BASE_PATH, 0)
-
-router.beforeEach(({ to, from, next }) => {
-    const toIndex = history.getItem(to.path)
-    const fromIndex = history.getItem(from.path)
-    if (toIndex) {
-        if (toIndex > fromIndex || !fromIndex) {
-            commit('UPDATE_DIRECTION', 'forward')
-        } else {
-            commit('UPDATE_DIRECTION', 'reverse')
-        }
-    } else {
-        ++historyCount
-        history.setItem('count', historyCount)
-        to.path !== config.BASE_PATH && history.setItem(to.path, historyCount)
-        commit('UPDATE_DIRECTION', 'forward')
-    }
-    commit('UPDATE_LOADING', true)
-    setTimeout(next, 50)
-})
-router.afterEach(() => {
-    commit('UPDATE_LOADING', false)
-})
-sync(store, router)
-
 
 axios.get('http://116.236.230.131:55002/auth/getConfig', {
     params: {
@@ -179,14 +98,11 @@ axios.get('http://116.236.230.131:55002/auth/getConfig', {
 });
 
 dd.ready(function(){
-    Vue.use(ddPlugin)
-    router.start(App, '#app')
-
+    initVue();
     commit('DDCONFIG_SUCCESS', ddConfig)
 });
 dd.error(function(error){
-    router.start(App, '#app')
-
+    initVue();
     commit('DDCONFIG_ERROR', false)
     /**
      {
@@ -204,3 +120,90 @@ function getParamByName(name) {
     var r = window.location.search.substr(1).match(reg);
     if (r != null) return unescape(r[2]); return null;
 };
+
+function initVue() {
+    Vue.use(Router)
+    Vue.use(bbPlugin)
+    Vue.use(ddPlugin)
+
+    Vue.component('alert',vux.Alert)
+
+    let router = new Router({
+        transitionOnLoad: false
+    })
+    router.map({
+        [config.BASE_PATH] : {
+            component: function(resolve){
+                require.ensure([], function() {
+                    let route = require('./page/home/route').default;
+                    resolve(route);
+                },'home')
+            },
+            subRoutes: {
+                '/': {
+                    component: function (resolve) {
+                        require.ensure([], function () {
+                            let route = require('./page/home/index/route').default;
+                            resolve(route);
+                        },'index')
+                    }
+                },
+                '/member' : {
+                    component: function(resolve){
+                        require.ensure([], function() {
+                            let route = require('./page/home/member/route').default;
+                            resolve(route);
+                        },'member')
+                    }
+                },
+                // '/wenda' : {
+                //     component: function(resolve){
+                //         require.ensure([], function() {
+                //             let route = require('./states/index/wenda/route').default;
+                //             resolve(route);
+                //         },'wenda')
+                //     }
+                // },
+            }
+        },
+        [config.BASE_PATH+'/user/sign_in'] : {
+            component: function (resolve) {
+                require.ensure([], function () {
+                    let route = require('./page/user-sign-in/route').default;
+                    resolve(route);
+                }, 'user-sign-in')
+            }
+        }
+    });
+    router.redirect({
+        '*': config.BASE_PATH
+    });
+    let history = window.sessionStorage
+    history.clear()
+    let historyCount = history.getItem('count') * 1 || 0
+    history.setItem(config.BASE_PATH, 0)
+
+    router.beforeEach(({ to, from, next }) => {
+        const toIndex = history.getItem(to.path)
+        const fromIndex = history.getItem(from.path)
+        if (toIndex) {
+            if (toIndex > fromIndex || !fromIndex) {
+                commit('UPDATE_DIRECTION', 'forward')
+            } else {
+                commit('UPDATE_DIRECTION', 'reverse')
+            }
+        } else {
+            ++historyCount
+            history.setItem('count', historyCount)
+            to.path !== config.BASE_PATH && history.setItem(to.path, historyCount)
+            commit('UPDATE_DIRECTION', 'forward')
+        }
+        commit('UPDATE_LOADING', true)
+        setTimeout(next, 50)
+    })
+    router.afterEach(() => {
+        commit('UPDATE_LOADING', false)
+    })
+    sync(store, router)
+    router.start(App, '#app')
+}
