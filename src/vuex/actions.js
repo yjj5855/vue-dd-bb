@@ -4,10 +4,10 @@ import axios from 'axios'
 
 export function getRequestAuthCode({ dispatch, state }, corpId) {
 
-    console.log(state.ddConfig.corpId);
+    console.log(state.app.ddConfig.corpId);
 
     dd.runtime.permission.requestAuthCode({
-        corpId : state.ddConfig.corpId || corpId,
+        corpId : state.app.ddConfig.corpId || corpId,
         onSuccess : function(result) {
             dispatch(mutations.UPDATE_CODE,result.code)
 
