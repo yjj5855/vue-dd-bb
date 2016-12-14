@@ -22,9 +22,11 @@ let Index = Vue.extend({
             getRequestAuthCode
         }
     },
-    ready : function(){ //做浏览器判断 和 兼容
+    ready : function(){
         console.log('APP ready 应该只执行一次');
-        this.getRequestAuthCode();
+        if(this.ddConfigStatus === true){
+            this.getRequestAuthCode();
+        }
     },
     data : ()=>{
         return Value

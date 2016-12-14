@@ -98,12 +98,12 @@ axios.get('http://116.236.230.131:55002/auth/getConfig', {
 });
 
 dd.ready(function(){
-    initVue();
     commit('DDCONFIG_SUCCESS', ddConfig)
+    initVue();
 });
 dd.error(function(error){
-    initVue();
     commit('DDCONFIG_ERROR', false)
+    initVue();
     /**
      {
         message:"错误信息",//message信息会展示出钉钉服务端生成签名使用的参数，请和您生成签名的参数作对比，找出错误的参数
