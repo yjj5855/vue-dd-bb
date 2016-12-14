@@ -23,10 +23,11 @@ export function getRequestAuthCode({ dispatch, state }, corpId) {
 }
 
 export function getUserInfo({dispatch, state}, code) {
-    axios.get('https://oapi.dingtalk.com/user/getuserinfo', {
+    axios.get('http://116.236.230.131:55002/user/getuserinfo', {
         params: {
-            access_token: 'ACCESS_TOKEN',
-            code: 'CODE'
+            code: code,
+            corpId: state.app.ddConfig.corpId,
+            suiteKey: state.app.ddConfig.suiteKey
         },
         timeout: 5000,
     }).then(function (response) {
