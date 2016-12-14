@@ -28,8 +28,15 @@ let Index = Vue.extend({
     },
     methods: {
         selected(path){
-            console.log(this.route.path.substr(0,path.length),path)
-            if(this.route.path.substr(0,path.length) == path){
+            let realPath = ''
+            let index = this.route.path.indexOf('?');
+            if(index > 0){
+                realPath = this.route.path.substr(0,index)
+            }else{
+                realPath = this.route.path
+            }
+            console.log(realPath,path)
+            if(realPath == path){
                 return true
             }else{
                 return false
@@ -37,17 +44,6 @@ let Index = Vue.extend({
         }
     },
     computed : {
-        getMyCityName(){
-            if(!this.myCity || this.myCity.city_name == ''){
-                return '上海'
-            }
-            return this.myCity.city_name;
-        }
-    },
-    route : {
-        data : function(transition){
-            transition.next();
-        }
     }
 })
 
