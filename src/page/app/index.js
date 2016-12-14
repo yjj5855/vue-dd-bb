@@ -15,6 +15,7 @@ let Index = Vue.extend({
             route: (state) => state.route,
             isLoading: (state) => state.app.isLoading,
             direction: (state) => state.app.direction,
+            ddConfig: (state) => state.app.ddConfig,
             ddConfigStatus: (state) => state.app.ddConfigStatus,
             code: (state) => state.app.code,
         },
@@ -22,11 +23,15 @@ let Index = Vue.extend({
             getRequestAuthCode
         }
     },
+    watch: {
+        ddConfigStatus: function (val, oldVal) {
+            if(val === true){
+                this.getRequestAuthCode();
+            }
+        }
+    },
     ready : function(){
         console.log('APP ready 应该只执行一次');
-        if(this.ddConfigStatus === true){
-            this.getRequestAuthCode();
-        }
     },
     data : ()=>{
         return Value
