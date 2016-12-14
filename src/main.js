@@ -162,7 +162,7 @@ function initVue() {
                 commit('UPDATE_DIRECTION', 'forward')
             }
             commit('UPDATE_LOADING', true)
-            setTimeout(next, 50)
+            setTimeout(next, 10)
         })
         router.afterEach(() => {
             commit('UPDATE_LOADING', false)

@@ -10,7 +10,6 @@ import Tabbar from 'vux/dist/components/tabbar'
 import TabbarItem from 'vux/dist/components/tabbar-item'
 
 let Index = Vue.extend({
-    //replace : true, //必须注释掉 不然动画失效
     template : Tpl,
     components : {
         Tabbar,
