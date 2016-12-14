@@ -23,7 +23,7 @@ export function getRequestAuthCode({ dispatch, state }, corpId) {
 }
 
 export function getUserInfo({dispatch, state}, code) {
-    axios.get('http://116.236.230.131:55002/user/getuserinfo', {
+    axios.get('http://116.236.230.131:55002/user/getUserinfo', {
         params: {
             code: code,
             corpId: state.app.ddConfig.corpId,
