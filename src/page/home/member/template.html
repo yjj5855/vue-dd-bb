@@ -4,11 +4,11 @@
         <p class="vux-center"><img class="member-avatar" :src="filterAvatar"></p>
     </blur>
 
-    <!--<group title="">-->
-        <!--<cell title="微信昵称" :value=""></cell>-->
-        <!--<cell title="手机" :value="phoneNumber" @click="showBindPhoneDialog"></cell>-->
+    <group title="">
+        <cell title="姓名" :value="userInfo.name"></cell>
+        <cell title="手机" :value="userInfo.mobile"></cell>
         <!--<cell title="邀请码" :value="$myInfo.invite_code" @click="showQrcode = true"></cell>-->
-    <!--</group>-->
+    </group>
 
     <!--<group title="">-->
         <!--<cell title="钱包" :value="''+walletMoney" @click="showWallet = true"></cell>-->
