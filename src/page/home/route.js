@@ -23,18 +23,12 @@ let Index = Vue.extend({
             direction: (state) => state.app.direction
         }
     },
-    // watch: {
-    //     route: function (val, oldVal) {
-    //         console.log(val)
-    //     }
-    // },
     data : ()=>{
         return Value
     },
     methods: {
         selected(path){
-            console.log(this.route.path,path)
-            if(this.route.path == path){
+            if(this.route.path.substr(0,path.length) == path){
                 return true
             }else{
                 return false
