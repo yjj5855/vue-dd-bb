@@ -2,8 +2,8 @@ import * as mutations from './mutation-types'
 import Q from 'q'
 import axios from 'axios'
 
-export function getRequestAuthCode({ dispatch, state }, products) {
-    let corpId = state.app.ddConfig.corpId;
+export function getRequestAuthCode({ dispatch, state }, corpId) {
+
     console.log('corpId=>'+corpId)
     dd.runtime.permission.requestAuthCode({
         corpId : corpId,
