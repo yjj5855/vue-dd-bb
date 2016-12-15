@@ -183,7 +183,20 @@ function initVue() {
                 commit('UPDATE_DIRECTION', 'forward')
             }
             commit('UPDATE_LOADING', true)
-            setTimeout(next, 10)
+
+
+            setTimeout(()=>{
+                try {
+                    //设置右侧按钮
+                    dd.biz.navigation.setRight({
+                        show: false,//控制按钮显示， true 显示， false 隐藏， 默认true
+                    });
+                }catch (err){
+                    console.error(err);
+                }
+
+                next();
+            }, 10)
         })
         router.afterEach(() => {
             commit('UPDATE_LOADING', false)
