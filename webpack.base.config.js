@@ -3,7 +3,6 @@ var webpack = require('webpack')
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var precss       = require('precss');
 var autoprefixer = require('autoprefixer');
-var env = require('./env').config
 
 
 module.exports = {

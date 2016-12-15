@@ -35,7 +35,6 @@ let Index = Vue.extend({
             }else{
                 realPath = this.route.path
             }
-            console.log(realPath,path)
             if(realPath == path){
                 return true
             }else{

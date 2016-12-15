@@ -27,15 +27,11 @@ let Index = Vue.extend({
     vuex: {
         getters: {
             route: (state) => state.route,
-            userInfo: (state) => state.app.user,
+            userInfo: (state) => state.app.user || {},
         },
     },
     ready : function(){
-        this.setTitle({title:'个人'}).then((data)=>{
-            console.log(data);
-        }).catch((err)=>{
-            console.error(err)
-        })
+        this.setTitle({title:'个人'})
     },
     data : ()=>{
         return {
@@ -50,7 +46,9 @@ let Index = Vue.extend({
     },
     computed : {
         filterAvatar(){
-            return this.userInfo.avatar !='' ? this.userInfo.avatar : 'http://img5.imgtn.bdimg.com/it/u=1457102793,1407747410&fm=23&gp=0.jpg'
+            return this.userInfo && this.userInfo.avatar && this.userInfo.avatar !=''
+                ? this.userInfo.avatar
+                : 'http://img5.imgtn.bdimg.com/it/u=1457102793,1407747410&fm=23&gp=0.jpg'
         }
     },
     route : {

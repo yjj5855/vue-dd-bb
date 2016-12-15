@@ -1,10 +1,14 @@
 import * as mutations from './mutation-types'
-import Q from 'q'
+import env from '../../env'
+import jsapi from '../lib/ddApiConfig'
 import axios from 'axios'
 
 export function getRequestAuthCode({ dispatch, state }, corpId) {
 
-    console.log(state.app.ddConfig.corpId);
+    if(!window.ability || window.ability < jsapi['runtime.permission.requestAuthCode']){
+        console.warn('容器版本过低，不支持 runtime.permission.requestAuthCode')
+        return;
+    }
 
     dd.runtime.permission.requestAuthCode({
         corpId : state.app.ddConfig.corpId || corpId,
@@ -23,7 +27,7 @@ export function getRequestAuthCode({ dispatch, state }, corpId) {
 }
 
 export function getUserInfo({dispatch, state}, code) {
-    axios.get('http://116.236.230.131:55002/user/getUserinfo', {
+    axios.get(env.API_HOST+'/user/getUserinfo', {
         params: {
             code: code,
             corpId: state.app.ddConfig.corpId,

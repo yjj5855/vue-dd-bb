@@ -11,11 +11,7 @@ let Index = Vue.extend({
     },
     ready : function(){
         console.log('ready')
-        this.setTitle({title:'签到'}).then((data)=>{
-            console.log(data);
-        }).catch((err)=>{
-            console.error(err)
-        })
+        this.setTitle({title:'签到'})
     },
     data : ()=>{
         return Value

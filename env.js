@@ -1,12 +1,9 @@
 'use strict';
-var env = {
+const env = {
 
     BASE_PATH : '/dd',
 
-    PATH_CLIENT   : __dirname+'/client',
-    PATH_WEBAPP   : __dirname+'/client/com.chezhil.webapp',
-
-
+    API_HOST : 'http://116.236.230.131:55002'
 }
 
-exports.config = env;
+export default env;

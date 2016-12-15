@@ -7,7 +7,7 @@ import * as vux from 'vux'
 import { sync } from 'vuex-router-sync'
 import store from './vuex/store'
 import FastClick from 'fastclick'
-import {config} from '../env'
+import env from '../env'
 import bbPlugin from './lib/vue-bb-plugin'
 import ddPlugin from './lib/vue-dd-plugin'
 import App from './page/app/index'
@@ -69,6 +69,8 @@ function ddIsReady() {
         dd.ready(function(){
             console.log('初始化钉钉');
             clearTimeout(timeout)
+
+            //设置返回按钮
             dd.biz.navigation.setLeft({
                 show: true,//控制按钮显示， true 显示， false 隐藏， 默认true
                 control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
@@ -81,6 +83,15 @@ function ddIsReady() {
                 },
                 onFail : function(err) {}
             });
+            //获取容器信息
+            dd.runtime.info({
+                onSuccess: function(result) {
+                    window.ability = parseInt(result.ability.replace(/\./g,''));
+                    console.log('容器版本为'+window.ability)
+                },
+                onFail : function(err) {}
+            })
+
             success(true)
         });
         dd.error(function(err){
@@ -108,7 +119,7 @@ function initVue() {
             transitionOnLoad: false
         })
         router.map({
-            [config.BASE_PATH] : {
+            [env.BASE_PATH] : {
                 component: function(resolve){
                     require.ensure([], function() {
                         let route = require('./page/home/route').default;
@@ -142,7 +153,7 @@ function initVue() {
                     // },
                 }
             },
-            [config.BASE_PATH+'/user/sign_in'] : {
+            [env.BASE_PATH+'/user/sign_in'] : {
                 component: function (resolve) {
                     require.ensure([], function () {
                         let route = require('./page/user-sign-in/route').default;
@@ -150,7 +161,7 @@ function initVue() {
                     }, 'user-sign-in')
                 }
             },
-            [config.BASE_PATH+'/user/bind'] : {
+            [env.BASE_PATH+'/user/bind'] : {
                 component: function (resolve) {
                     require.ensure([], function () {
                         let route = require('./page/user-bind-mobile/route').default;
@@ -160,7 +171,7 @@ function initVue() {
             }
         });
         router.redirect({
-            '*': config.BASE_PATH
+            '*': env.BASE_PATH
         });
         let history = window.sessionStorage
         history.clear()
@@ -233,6 +244,7 @@ function getConfig() {
                     jsApiList : [
                         'runtime.info',
                         'runtime.permission.requestAuthCode',
+                        'runtime.permission.requestOperateAuthCode', //反馈式操作临时授权码
 
                         'biz.alipay.pay',
                         'biz.contact.choose',
