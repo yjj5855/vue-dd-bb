@@ -29,197 +29,29 @@ Vue.component('x-input',vux.XInput)
 Vue.component('x-button',vux.XButton)
 
 let ddConfig = null;
-Q.Promise.all([
-    getConfig(),
-    ddIsReady()
-]).then(([data1,data2])=>{
-    console.log(data1,data2);
-    ddConfig = data1;
-    if(data2){
-        console.log('dd.ready');
-    }
-}).catch((err)=>{
-    console.log(err);
-    if(err && err.errCode == -1){
-        //dd.ready 失败
-    }else if(err && err.errCode == -2){
-        //请求失败
-    }
-}).finally(()=>{
-    initVue().then(()=>{
+
+getConfig()
+    .then((data)=>{
+        ddConfig = data;
+        dd.config(ddConfig);
+    })
+    .then(ddIsReady)
+    .then(initVue)
+    .then(()=>{
         document.querySelector('#init-loading').remove();
         console.log('init vue 完成')
         setTimeout(()=>{
             if(ddConfig != null){
-                dd.config(ddConfig);
                 commit('DDCONFIG_SUCCESS', ddConfig)
             }else{
                 commit('DDCONFIG_ERROR', false);
             }
         },300)
-
+    })
+    .catch((err)=>{
+        alert(JSON.stringify(err));
     });
-});
 
-function ddIsReady() {
-    return Q.Promise((success, error)=>{
-        let timeout = setTimeout(()=>{
-            error({errCode:-1,msg:'dd.ready初始化超时'});
-        },2000)
-        dd.ready(function(){
-            console.log('初始化钉钉');
-            clearTimeout(timeout)
-
-            //设置返回按钮
-            dd.biz.navigation.setLeft({
-                show: true,//控制按钮显示， true 显示， false 隐藏， 默认true
-                control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
-                showIcon: true,//是否显示icon，true 显示， false 不显示，默认true； 注：具体UI以客户端为准
-                text: '返回',//控制显示文本，空字符串表示显示默认文本
-                onSuccess : function(result) {
-                    //如果control为true，则onSuccess将在发生按钮点击事件被回调
-                    console.log('点击了返回按钮');
-                    window.history.back();
-                },
-                onFail : function(err) {}
-            });
-            //获取容器信息
-            dd.runtime.info({
-                onSuccess: function(result) {
-                    window.ability = parseInt(result.ability.replace(/\./g,''));
-                    console.log('容器版本为'+window.ability)
-                },
-                onFail : function(err) {}
-            })
-
-            success(true)
-        });
-        dd.error(function(err){
-            clearTimeout(timeout)
-            /**
-             {
-                message:"错误信息",//message信息会展示出钉钉服务端生成签名使用的参数，请和您生成签名的参数作对比，找出错误的参数
-                errorCode:"错误码"
-             }
-             **/
-            console.error('dd error: ' + JSON.stringify(err));
-            error({errCode:-1,msg:'dd.error配置信息不对'})
-        });
-    })
-}
-
-function initVue() {
-    return Q.Promise((success, error)=>{
-
-        Vue.use(Router)
-        Vue.use(bbPlugin)
-        Vue.use(ddPlugin)
-
-        let router = new Router({
-            transitionOnLoad: false
-        })
-        router.map({
-            [env.BASE_PATH] : {
-                component: function(resolve){
-                    require.ensure([], function() {
-                        let route = require('./page/home/route').default;
-                        resolve(route);
-                    },'home')
-                },
-                subRoutes: {
-                    '/': {
-                        component: function (resolve) {
-                            require.ensure([], function () {
-                                let route = require('./page/home/index/route').default;
-                                resolve(route);
-                            },'index')
-                        }
-                    },
-                    '/member' : {
-                        component: function(resolve){
-                            require.ensure([], function() {
-                                let route = require('./page/home/member/route').default;
-                                resolve(route);
-                            },'member')
-                        }
-                    },
-                    // '/wenda' : {
-                    //     component: function(resolve){
-                    //         require.ensure([], function() {
-                    //             let route = require('./states/index/wenda/route').default;
-                    //             resolve(route);
-                    //         },'wenda')
-                    //     }
-                    // },
-                }
-            },
-            [env.BASE_PATH+'/user/sign_in'] : {
-                component: function (resolve) {
-                    require.ensure([], function () {
-                        let route = require('./page/user-sign-in/route').default;
-                        resolve(route);
-                    }, 'user-sign-in')
-                }
-            },
-            [env.BASE_PATH+'/user/bind'] : {
-                component: function (resolve) {
-                    require.ensure([], function () {
-                        let route = require('./page/user-bind-mobile/route').default;
-                        resolve(route);
-                    }, 'user-bind-mobile')
-                }
-            }
-        });
-        router.redirect({
-            '*': env.BASE_PATH
-        });
-        let history = window.sessionStorage
-        history.clear()
-        let historyCount = history.getItem('count') * 1 || 0
-        history.setItem('/', 0)
-
-        router.beforeEach(({ to, from, next }) => {
-            const toIndex = history.getItem(to.path)
-            const fromIndex = history.getItem(from.path)
-            if (toIndex) {
-                if (toIndex > fromIndex || !fromIndex) {
-                    commit('UPDATE_DIRECTION', 'forward')
-                } else {
-                    commit('UPDATE_DIRECTION', 'reverse')
-                }
-            } else {
-                ++historyCount
-                history.setItem('count', historyCount)
-                to.path !== '/' && history.setItem(to.path, historyCount)
-                commit('UPDATE_DIRECTION', 'forward')
-            }
-            commit('UPDATE_LOADING', true)
-
-
-            setTimeout(()=>{
-                try {
-                    //设置右侧按钮
-                    dd.biz.navigation.setRight({
-                        show: false,//控制按钮显示， true 显示， false 隐藏， 默认true
-                    });
-                }catch (err){
-                    console.error(err);
-                }
-
-                next();
-            }, 10)
-        })
-        router.afterEach(() => {
-            commit('UPDATE_LOADING', false)
-        })
-        sync(store, router)
-        router.start(App, '#app')
-
-        FastClick.attach(document.body)
-
-        success()
-    })
-}
 
 function getConfig() {
     return Q.Promise((success, error)=>{
@@ -307,3 +139,164 @@ function getConfig() {
     })
 
 }
+
+function ddIsReady() {
+    return Q.Promise((success, error)=>{
+        let timeout = setTimeout(()=>{
+            error({errCode:-1,msg:'dd.ready初始化超时'});
+        },2000)
+        dd.ready(function(){
+            console.log('初始化钉钉');
+            clearTimeout(timeout)
+
+            //设置返回按钮
+            dd.biz.navigation.setLeft({
+                show: true,//控制按钮显示， true 显示， false 隐藏， 默认true
+                control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
+                showIcon: true,//是否显示icon，true 显示， false 不显示，默认true； 注：具体UI以客户端为准
+                text: '返回',//控制显示文本，空字符串表示显示默认文本
+                onSuccess : function(result) {
+                    //如果control为true，则onSuccess将在发生按钮点击事件被回调
+                    console.log('点击了返回按钮');
+                    window.history.back();
+                },
+                onFail : function(err) {}
+            });
+            //获取容器信息
+            dd.runtime.info({
+                onSuccess: function(result) {
+                    window.ability = parseInt(result.ability.replace(/\./g,''));
+                    console.log('容器版本为'+window.ability)
+                },
+                onFail : function(err) {}
+            })
+
+            success(true)
+        });
+        dd.error(function(err){
+            clearTimeout(timeout)
+            /**
+             {
+                message:"错误信息",//message信息会展示出钉钉服务端生成签名使用的参数，请和您生成签名的参数作对比，找出错误的参数
+                errorCode:"错误码"
+             }
+             **/
+            console.error('dd error: ' + JSON.stringify(err));
+            error({errCode:-1,msg:'dd.error配置信息不对'})
+        });
+    })
+}
+
+function initVue() {
+    return Q.Promise((success, error)=>{
+
+        Vue.use(Router)
+        Vue.use(bbPlugin)
+        Vue.use(ddPlugin)
+
+        let router = new Router({
+            transitionOnLoad: false
+        })
+        router.map({
+            [env.BASE_PATH] : {
+                component: function(resolve){
+                    require.ensure([], function() {
+                        let route = require('./page/home/route').default;
+                        resolve(route);
+                    },'home')
+                },
+                subRoutes: {
+                    '/': {
+                        component: function (resolve) {
+                            require.ensure([], function () {
+                                let route = require('./page/home/index/route').default;
+                                resolve(route);
+                            },'index')
+                        }
+                    },
+                    '/member' : {
+                        component: function(resolve){
+                            require.ensure([], function() {
+                                let route = require('./page/home/member/route').default;
+                                resolve(route);
+                            },'member')
+                        }
+                    },
+                    // '/banbu' : {
+                    //     component: function(resolve){
+                    //         require.ensure([], function() {
+                    //             let route = require('./states/index/wenda/route').default;
+                    //             resolve(route);
+                    //         },'wenda')
+                    //     }
+                    // },
+                }
+            },
+            [env.BASE_PATH+'/user/sign_in'] : {
+                component: function (resolve) {
+                    require.ensure([], function () {
+                        let route = require('./page/user-sign-in/route').default;
+                        resolve(route);
+                    }, 'user-sign-in')
+                }
+            },
+            [env.BASE_PATH+'/user/bind'] : {
+                component: function (resolve) {
+                    require.ensure([], function () {
+                        let route = require('./page/user-bind-mobile/route').default;
+                        resolve(route);
+                    }, 'user-bind-mobile')
+                }
+            }
+        });
+        router.redirect({
+            '*': env.BASE_PATH
+        });
+        let history = window.sessionStorage
+        history.clear()
+        let historyCount = history.getItem('count') * 1 || 0
+        history.setItem('/', 0)
+
+        router.beforeEach(({ to, from, next }) => {
+            const toIndex = history.getItem(to.path)
+            const fromIndex = history.getItem(from.path)
+            if (toIndex) {
+                if (toIndex > fromIndex || !fromIndex) {
+                    commit('UPDATE_DIRECTION', 'forward')
+                } else {
+                    commit('UPDATE_DIRECTION', 'reverse')
+                }
+            } else {
+                ++historyCount
+                history.setItem('count', historyCount)
+                to.path !== '/' && history.setItem(to.path, historyCount)
+                commit('UPDATE_DIRECTION', 'forward')
+            }
+            commit('UPDATE_LOADING', true)
+
+
+            setTimeout(()=>{
+                try {
+                    //设置右侧按钮
+                    dd.biz.navigation.setRight({
+                        show: false,//控制按钮显示， true 显示， false 隐藏， 默认true
+                    });
+                }catch (err){
+                    console.error(err);
+                }
+
+                next();
+            }, 10)
+        })
+        router.afterEach(() => {
+            commit('UPDATE_LOADING', false)
+        })
+        sync(store, router)
+        router.start(App, '#app')
+
+        FastClick.attach(document.body)
+
+        success()
+    })
+}
+
