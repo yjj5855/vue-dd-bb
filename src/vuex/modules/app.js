@@ -17,8 +17,7 @@ const state = {
     ddConfigStatus: null,
     code: null,
 
-    user: null,
-    sys_level: null
+    user: null
 }
 
 const mutations = {
@@ -44,9 +43,6 @@ const mutations = {
     },
     [LOGIN_ERROR] (state, user) {
         state.user = false
-    },
-    [UPDATE_SYS_LEVEL] (state, sys_level) {
-        state.sys_level = sys_level
     },
 }
 
