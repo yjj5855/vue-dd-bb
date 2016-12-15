@@ -35,27 +35,43 @@ getConfig()
         ddConfig = data;
         dd.config(ddConfig);
     })
-    .then(ddIsReady)
-    .then(initVue)
-    .then(()=>{
-        document.querySelector('#init-loading').remove();
-        console.log('init vue 完成')
-        setTimeout(()=>{
-            if(ddConfig != null){
-                commit('DDCONFIG_SUCCESS', ddConfig)
-            }else{
-                commit('DDCONFIG_ERROR', false);
-            }
-        },300)
-    })
+    // .then(ddIsReady)
+    // .then(initVue)
+    // .then(()=>{
+    //     document.querySelector('#init-loading').remove();
+    //     console.log('init vue 完成')
+    //     setTimeout(()=>{
+    //         if(ddConfig != null){
+    //             commit('DDCONFIG_SUCCESS', ddConfig)
+    //         }else{
+    //             commit('DDCONFIG_ERROR', false);
+    //         }
+    //     },300)
+    // })
     .catch((err)=>{
         alert(JSON.stringify(err));
-    });
+    })
+    .finally(()=>{
+        //开发环境
+        ddIsReady()
+            .then(initVue)
+            .then(()=>{
+                document.querySelector('#init-loading').remove();
+                console.log('init vue 完成')
+                setTimeout(()=>{
+                    if(ddConfig != null){
+                        commit('DDCONFIG_SUCCESS', ddConfig)
+                    }else{
+                        commit('DDCONFIG_ERROR', false);
+                    }
+                },300)
+            })
+    })
 
 
 function getConfig() {
     return Q.Promise((success, error)=>{
-        axios.get('http://116.236.230.131:55002/auth/getConfig', {
+        axios.get(env.API_HOST+'/auth/getConfig', {
             params: {
                 corpid: getParamByName('corpid')||'ding1b56d2f4ba72e91635c2f4657eb6378f',
                 appid: getParamByName('appid')||'2545',
