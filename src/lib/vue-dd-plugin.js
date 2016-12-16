@@ -34,7 +34,7 @@ ddPlugin.install = function (Vue, option) {
                     success(result)
                 };
                 param.onFail = function(result) {
-                    process.env.NODE_ENV !== 'production' && console.log(method, '调用失败，fail', result)
+                    process.env.NODE_ENV !== 'production' && console.warn(method, '调用失败，fail', result)
                     error(result)
                 };
                 getMethod(method)(param);
