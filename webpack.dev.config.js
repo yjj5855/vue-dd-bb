@@ -3,7 +3,7 @@ var config = require('./webpack.base.config')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-config.devtool = 'source-map'
+// config.devtool = 'source-map'
 
 config.output.filename = '[name].[hash:8].js'
 config.output.chunkFilename = '[name].[hash:8].js'
