@@ -31,7 +31,7 @@ let Index = Vue.extend({
         },
     },
     ready : function(){
-        this.setTitle({title:'个人'})
+        this.callJsApi('biz.navigation.setTitle',{title:'个人'});
     },
     data : ()=>{
         return {

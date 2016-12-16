@@ -10,8 +10,7 @@ let Index = Vue.extend({
 
     },
     ready : function(){
-        console.log('ready')
-        this.setTitle({title:'签到'})
+        this.callJsApi('biz.navigation.setTitle',{title:'签到'});
     },
     data : ()=>{
         return Value

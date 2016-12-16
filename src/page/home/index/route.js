@@ -30,41 +30,12 @@ let Index = Vue.extend({
         return Value
     },
     methods: {
-        success: function(e, t) {
-            // console.log("success load", e);
-            var n = t.parentNode.querySelector("span");
-            t.parentNode.removeChild(n);
-            if(e == this.list[0]){
-                $(t).on('click',()=>{
-                    this.goRoute('/yuyue',this)
-                })
-            }
-        },
-        error: function(e, t, n) {
-            // console.log("error load", n, e);
-            var a = t.parentNode.querySelector("span");
-            a.innerText = "加载失败"
-        },
-        toast(){
-            appRoot.toast('其他地区正在开通')
-        }
+
     },
     computed : {
         
     },
     route : {
-        data : function({next}){
-            next();
-        },
-        activate : function({next}){
-            next();
-        },
-        canDeactivate : function({next}){
-            next();
-        },
-        deactivate: function({next}){
-            next();
-        }
 
     }
 })

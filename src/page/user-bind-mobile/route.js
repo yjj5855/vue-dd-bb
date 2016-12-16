@@ -7,14 +7,13 @@ import './style.less'
 let Index = Vue.extend({
     template : Tpl,
     ready : function(){
-        this.setTitle({title:'员工绑定'});
+        this.callJsApi('biz.navigation.setTitle',{title:'员工绑定'});
     },
     data : ()=>{
         return Value
     },
     methods: {
         sendSms(){
-
             this.sms_number = 60;
             let interval = setInterval(()=>{
                 this.sms_number --;
