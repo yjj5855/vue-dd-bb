@@ -38,7 +38,7 @@ export function getUserInfo({dispatch, state}, code) {
         if(response.status == 200 && response.data.code == 200){
             let user = response.data.result;
             dispatch(mutations.LOGIN_SUCCESS, user);
-            dispatch(mutations.UPDATE_SYS_LEVEL, user.sys_level);
+            // dispatch(mutations.UPDATE_SYS_LEVEL, user.sys_level);
         }else{
             dispatch(mutations.LOGIN_ERROR,false)
         }

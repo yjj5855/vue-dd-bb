@@ -5,8 +5,7 @@ import {
     DDCONFIG_ERROR,
     UPDATE_CODE,
     LOGIN_SUCCESS,
-    LOGIN_ERROR,
-    UPDATE_SYS_LEVEL
+    LOGIN_ERROR
 } from '../mutation-types'
 
 const state = {
