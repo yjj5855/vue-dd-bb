@@ -3,16 +3,13 @@ var config = require('./webpack.base.config')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-config.devtool = 'source-map'
-
 config.output.filename = '[name].[hash:8].js'
 config.output.chunkFilename = '[name].[hash:8].js'
-
 
 config.plugins = (config.plugins || []).concat([
   new webpack.DefinePlugin({
     'process.env': {
-      NODE_ENV: '"dev"'
+      NODE_ENV: '"production"'
     }
   }),
   //开发时css不打包到一个文件中,方便调试

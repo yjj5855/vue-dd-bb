@@ -2,7 +2,7 @@ import Q from 'q'
 import axios from 'axios'
 import Vue from 'vue'
 import Router from 'vue-router'
-import 'vux/dist/vux.css';
+import 'vux/dist/vux.css'
 import * as vux from 'vux'
 import { sync } from 'vuex-router-sync'
 import store from './vuex/store'
@@ -20,8 +20,10 @@ window.getParamByName = function(name) {
 let dd = window.dd;
 const commit = store.commit || store.dispatch;
 
-Vue.config.debug = true
-Vue.config.devtools = true
+console.log(process.env.NODE_ENV)
+Vue.config.debug = process.env.NODE_ENV !== 'production';
+Vue.config.devtools = process.env.NODE_ENV !== 'production';
+
 Vue.component('alert',vux.Alert)
 Vue.component('loading',vux.Loading)
 Vue.component('group',vux.Group)
@@ -107,7 +109,7 @@ function getConfig() {
                         'biz.util.openLink',
                         'biz.util.open',
                         'biz.util.share',
-                        // 'biz.util.ut',
+                        'biz.util.ut',
                         'biz.util.uploadImage',
                         'biz.util.previewImage',
                         'biz.util.datepicker',

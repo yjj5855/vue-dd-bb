@@ -7,8 +7,6 @@ var autoprefixer = require('autoprefixer');
 
 module.exports = {
 
-  // devtool: 'source-map',
-
   entry: {
     web_app:"./src/main",
     //公共库
