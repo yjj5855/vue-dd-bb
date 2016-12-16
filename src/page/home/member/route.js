@@ -35,14 +35,20 @@ let Index = Vue.extend({
     },
     data : ()=>{
         return {
-
+            img_url: ''
         }
     },
     events : {
        
     },
     methods: {
-
+        uploadImg(){
+            this.callJsApi('biz.util.uploadImage',{
+                multiple: false, //是否多选，默认false
+            }).then((data)=>{
+                this.img_url = data[0];
+            })
+        }
     },
     computed : {
         filterAvatar(){

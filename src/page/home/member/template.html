@@ -9,5 +9,11 @@
         <cell title="手机" :value="userInfo.mobile"></cell>
     </group>
 
+    <group title="">
+        <cell title="上传图片" :value="img_url" @click="uploadImg()"></cell>
+    </group>
 
+    <p class="vux-center">
+        <img class="member-avatar" :src="img_url">
+    </p>
 </div>
