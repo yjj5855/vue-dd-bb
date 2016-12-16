@@ -24,7 +24,7 @@ let Index = Vue.extend({
         SwiperItem,
     },
     ready : function(){ //做浏览器判断 和 兼容
-        this.setTitle({title:'首页'})
+        this.callJsApi('biz.navigation.setTitle',{title:'首页'});
     },
     data : ()=>{
         return Value
