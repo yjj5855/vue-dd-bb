@@ -17,35 +17,42 @@ var getMethod = function(method, ns) {
     }
 };
 
+function callJsApi(method, param = {}) {
+    return Q.Promise((success, error)=> {
+        if (!window.ability || window.ability < jsapi[method]) {
+            console.warn('容器版本过低，不支持 ' + method)
+            return error({errCode: 404, msg: '容器版本过低，不支持' + method})
+        }
+
+        param.onSuccess = function (result) {
+            process.env.NODE_ENV !== 'production' && console.log(method, '调用成功，success', result)
+            success(result)
+        };
+        param.onFail = function (result) {
+            process.env.NODE_ENV !== 'production' && console.warn(method, '调用失败，fail', result)
+            error(result)
+        };
+        getMethod(method)(param);
+    })
+}
+
+
 ddPlugin.install = function (Vue, option) {
     var dd = window.dd;
 
     if(dd){
-
-        Vue.prototype.callJsApi = function (method, param = {}) {
-            return Q.Promise((success, error)=>{
-                if(!window.ability || window.ability < jsapi[method]){
-                    console.warn('容器版本过低，不支持 '+ method)
-                    return error({errCode: 404, msg: '容器版本过低，不支持'+method})
-                }
-
-                param.onSuccess = function(result) {
-                    process.env.NODE_ENV !== 'production' && console.log(method, '调用成功，success', result)
-                    success(result)
-                };
-                param.onFail = function(result) {
-                    process.env.NODE_ENV !== 'production' && console.warn(method, '调用失败，fail', result)
-                    error(result)
-                };
-                getMethod(method)(param);
-            })
-
-        }
-
+        Vue.prototype.callJsApi = callJsApi;
+        window.callJsApi = callJsApi;
     }else{
-        console.error('dd没有定义')
+        let func = function () {
+            console.log('dd没有定义');
+        };
+        Vue.prototype.callJsApi = func;
+        window.callJsApi = func;
+        console.error('dd没有定义');
     }
 };
+
 
 (function (Plugin) {
     if(typeof module === 'object' && typeof module.exports === 'object'){

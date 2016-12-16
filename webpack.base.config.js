@@ -20,6 +20,8 @@ module.exports = {
       'vuex-router-sync',
       'vux',
       'fastclick',
+      './src/lib/ddApiConfig.js',
+      './src/lib/vue-dd-plugin.js'
     ]
   },
 
