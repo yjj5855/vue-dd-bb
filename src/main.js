@@ -12,7 +12,7 @@ import env from '../env'
 import bbPlugin from './lib/vue-bb-plugin'
 import ddPlugin from './lib/vue-dd-plugin'
 import Raven from 'raven-js'
-import { sentry_url, logException } from './lib/ravenConfig'
+import { sentry_url, logException, setRavenUser } from './lib/ravenConfig'
 import App from './page/app/index'
 
 //全局配置axios
@@ -24,7 +24,6 @@ for(let key in axiosConfig){
 Raven.config(sentry_url, {
     environment: process.env.NODE_ENV,
     release: '0.0.1',
-    corpid: getParamByName('corpid') || '',
 }).install();
 
 let dd = window.dd;

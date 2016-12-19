@@ -1,7 +1,7 @@
 import * as mutations from './mutation-types'
 import env from '../../env'
 import axios from 'axios'
-import { logException } from '../lib/ravenConfig'
+import { logException, setRavenUser } from '../lib/ravenConfig'
 
 export function getRequestAuthCode({ dispatch, state }, corpId) {
 
@@ -33,6 +33,7 @@ export function getUserInfo({dispatch, state}, code) {
             let user = response.data.result;
             dispatch(mutations.LOGIN_SUCCESS, user);
             // dispatch(mutations.UPDATE_SYS_LEVEL, user.sys_level);
+            setRavenUser(user);
         }else{
             dispatch(mutations.LOGIN_ERROR,false)
             logException(new Error('获取用户信息'), this)

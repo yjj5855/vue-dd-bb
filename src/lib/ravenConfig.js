@@ -11,3 +11,11 @@ export function logException(ex, context) {
   /*eslint no-console:0*/
   window && window.console && console.error && console.error(ex);
 }
+
+export function setRavenUser(user = {}) {
+  Raven.setUserContext({
+    email: 'matt@example.com',
+    id: '123',
+    name: '张三'
+  })
+}
