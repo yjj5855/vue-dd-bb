@@ -2,6 +2,13 @@
 import env from '../../env'
 
 const bbPlugin = {};
+
+window.getParamByName = function(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]); return null;
+};
+
 bbPlugin.install = function (Vue, option) {
     
     // 设置cookie

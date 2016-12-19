@@ -1,6 +1,7 @@
 import * as mutations from './mutation-types'
 import env from '../../env'
 import axios from 'axios'
+import { logException } from '../lib/ravenConfig'
 
 export function getRequestAuthCode({ dispatch, state }, corpId) {
 
@@ -14,13 +15,13 @@ export function getRequestAuthCode({ dispatch, state }, corpId) {
         console.log('获取到了免登陆code=>'+result.code)
     }).catch((err)=>{
         dispatch(mutations.UPDATE_CODE,false)
-        console.log('获取免登陆code失败')
+        logException(new Error('获取免登陆code失败'), err)
     });
 
 }
 
 export function getUserInfo({dispatch, state}, code) {
-    axios.get(env.API_HOST+'/user/getUserinfo', {
+    axios.get('/user/getUserinfo', {
         params: {
             code: code,
             corpId: state.app.ddConfig.corpId,
@@ -34,8 +35,10 @@ export function getUserInfo({dispatch, state}, code) {
             // dispatch(mutations.UPDATE_SYS_LEVEL, user.sys_level);
         }else{
             dispatch(mutations.LOGIN_ERROR,false)
+            logException(new Error('获取用户信息'), this)
         }
     }).catch(function (err) {
         dispatch(mutations.LOGIN_ERROR,false)
+        logException(new Error('获取用户信息'), err)
     });
 }

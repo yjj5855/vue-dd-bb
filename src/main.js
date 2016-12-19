@@ -1,5 +1,6 @@
 import Q from 'q'
 import axios from 'axios'
+import axiosConfig from './lib/axiosConfig'
 import Vue from 'vue'
 import Router from 'vue-router'
 import 'vux/dist/vux.css'
@@ -10,13 +11,22 @@ import FastClick from 'fastclick'
 import env from '../env'
 import bbPlugin from './lib/vue-bb-plugin'
 import ddPlugin from './lib/vue-dd-plugin'
+import Raven from 'raven-js'
+import { sentry_url, logException } from './lib/ravenConfig'
 import App from './page/app/index'
 
-window.getParamByName = function(name) {
-    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-    var r = window.location.search.substr(1).match(reg);
-    if (r != null) return unescape(r[2]); return null;
-};
+//全局配置axios
+for(let key in axiosConfig){
+    axios.defaults[key] = axiosConfig[key];
+}
+
+//配置运行时错误收集
+Raven.config(sentry_url, {
+    tag: {
+        git_commit: 'v0.0.1',
+    }
+}).install();
+
 let dd = window.dd;
 const commit = store.commit || store.dispatch;
 
@@ -72,10 +82,16 @@ getConfig()
             })
     })
 
+let params = {
+    corpid: getParamByName('corpid')||'ding1b56d2f4ba72e91635c2f4657eb6378f',
+    appid: getParamByName('appid')||'2545',
+    suitekey: getParamByName('suiteKey')||'suiteiyfdj0dfixywzqwg',
+    paramUrl: document.URL
+}
 
 function getConfig() {
     return Q.Promise((success, error)=>{
-        axios.get(env.API_HOST+'/auth/getConfig', {
+        axios.get('/auth/getConfig', {
             params: {
                 corpid: getParamByName('corpid')||'ding1b56d2f4ba72e91635c2f4657eb6378f',
                 appid: getParamByName('appid')||'2545',
@@ -152,9 +168,11 @@ function getConfig() {
                 success(ddConfig)
             }else{
                 error({errCode:-2,msg:'接口请求失败'})
+                logException(new Error('config接口请求失败'), this)
             }
         }).catch(function (err) {
             error({errCode:-2,msg:'接口请求失败'})
+            logException(new Error('config接口请求失败'), err)
         });
     })
 
@@ -164,6 +182,7 @@ function ddIsReady() {
     return Q.Promise((success, error)=>{
         let timeout = setTimeout(()=>{
             error({errCode:-1,msg:'dd.ready初始化超时'});
+            logException(new Error('dd.ready初始化超时'), params)
         },2000)
         dd.ready(function(){
             console.log('初始化钉钉');
@@ -195,14 +214,8 @@ function ddIsReady() {
         });
         dd.error(function(err){
             clearTimeout(timeout)
-            /**
-             {
-                message:"错误信息",//message信息会展示出钉钉服务端生成签名使用的参数，请和您生成签名的参数作对比，找出错误的参数
-                errorCode:"错误码"
-             }
-             **/
-            console.error('dd error: ' + JSON.stringify(err));
             error({errCode:-1,msg:'dd.error配置信息不对'})
+            logException(new Error('dd.error配置信息不对'),err)
         });
     })
 }
