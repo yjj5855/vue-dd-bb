@@ -68,7 +68,8 @@ getConfig()
     })
     .finally(()=>{
         //开发环境
-        initVue()
+        ddIsReady()
+            .then(initVue)
             .then(()=>{
                 document.querySelector('#init-loading').remove();
                 console.log('init vue 完成')
