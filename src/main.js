@@ -22,9 +22,9 @@ for(let key in axiosConfig){
 
 //配置运行时错误收集
 Raven.config(sentry_url, {
-    tag: {
-        git_commit: 'v0.0.1',
-    }
+    environment: process.env.NODE_ENV,
+    release: '0.0.1',
+    corpid: getParamByName('corpid') || '',
 }).install();
 
 let dd = window.dd;
