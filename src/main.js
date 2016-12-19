@@ -27,8 +27,11 @@ Vue.config.devtools = process.env.NODE_ENV !== 'production';
 Vue.component('alert',vux.Alert)
 Vue.component('loading',vux.Loading)
 Vue.component('group',vux.Group)
+Vue.component('cell',vux.Cell)
 Vue.component('x-input',vux.XInput)
 Vue.component('x-button',vux.XButton)
+Vue.component('flexbox',vux.Flexbox)
+Vue.component('flexbox-item',vux.FlexboxItem)
 
 let ddConfig = null;
 
@@ -55,8 +58,7 @@ getConfig()
     })
     .finally(()=>{
         //开发环境
-        ddIsReady()
-            .then(initVue)
+        initVue()
             .then(()=>{
                 document.querySelector('#init-loading').remove();
                 console.log('init vue 完成')

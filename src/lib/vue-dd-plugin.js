@@ -21,7 +21,7 @@ function callJsApi(method, param = {}) {
     return Q.Promise((success, error)=> {
 
         if (!window.ability || window.ability < jsapi[method]) {
-            console.warn('容器版本过低，不支持 ' + method)
+            console.log('容器版本过低，不支持 ' + method)
             return error({errCode: 404, msg: '容器版本过低，不支持' + method})
         }
 
