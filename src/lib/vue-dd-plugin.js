@@ -1,6 +1,7 @@
 'use strict'
 import Q from 'q'
 import jsapi from './ddApiConfig'
+import { logException } from './ravenConfig'
 const ddPlugin = {};
 
 var getMethod = function(method, ns) {
@@ -21,7 +22,10 @@ function callJsApi(method, param = {}) {
     return Q.Promise((success, error)=> {
 
         if (!window.ability || window.ability < jsapi[method]) {
-            console.log('容器版本过低，不支持 ' + method)
+            logException(new Error('容器版本过低，不支持 ' + method), {
+                method: method,
+                param: param
+            });
             return error({errCode: 404, msg: '容器版本过低，不支持' + method})
         }
 
@@ -32,6 +36,7 @@ function callJsApi(method, param = {}) {
         param.onFail = function (result) {
             process.env.NODE_ENV !== 'production' && console.log(method, '调用失败，fail', result)
             error(result)
+            logException(new Error(method+ '调用失败，fail'), result);
         };
         getMethod(method)(param);
     })
