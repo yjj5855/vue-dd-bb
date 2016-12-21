@@ -34,4 +34,4 @@ return i&&(a=a>n.top?o?(a-n.top)*f+n.top:n.top:a,a=a<n.bottom-h?o?a+(n.bottom-h-
 	 * Licensed under the MIT license
 	 */
 !function(e,n){t.exports=n()}(this,function(){return function(t){function e(r){if(n[r])return n[r].exports;var i=n[r]={exports:{},id:r,loaded:!1};return t[r].call(i.exports,i,i.exports,e),i.loaded=!0,i.exports}var n={};return e.m=t,e.c=n,e.p="",e(0)}([function(t,e,n){t.exports=n(3)},function(t,e){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default={ready:function(){this.$parent.rerender()},beforeDestroy:function(){var t=this.$parent;this.$nextTick(function(){t.rerender()})}}},function(t,e){t.exports="<div class=vux-swiper-item><slot></slot></div>"},function(t,e,n){var r,i;r=n(1),i=n(2),t.exports=r||{},t.exports.__esModule&&(t.exports=t.exports.default),i&&(("function"==typeof t.exports?t.exports.options||(t.exports.options={}):t.exports).template=i)}])})}});
-//# sourceMappingURL=index.d46d5ac2.js.map
+//# sourceMappingURL=index.c6711cdb.js.map

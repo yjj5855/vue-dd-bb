@@ -99,7 +99,8 @@ function getConfig() {
                 paramUrl: document.URL
             },
             timeout: 2000,
-        }).then(function (response) {
+        }).success(function (response) {
+            console.log(response)
             if(response.status == 200 && response.data.code == 200){
                 let res = response.data.result;
                 let ddConfig = {
@@ -170,7 +171,7 @@ function getConfig() {
                 error({errCode:-2,msg:'接口请求失败'})
                 logException(new Error('config接口请求失败'), this)
             }
-        }).catch(function (err) {
+        }).error(function (err) {
             error({errCode:-2,msg:'接口请求失败'})
             logException(new Error('config接口请求失败'), err)
         });

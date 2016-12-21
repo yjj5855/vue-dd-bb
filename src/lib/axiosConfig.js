@@ -10,7 +10,7 @@ const config = {
 
 
     transformRequest: [function (data) {
-        // 这里可以在发送请求之前对请求数据做处理，比如form-data格式化等，这里可以使用开头引入的Qs（这个模块在安装axios的时候就已经安装了，不需要另外安装）
+        // 这里可以在发送请求之前对请求数据做处理
 
         return data;
     }],
@@ -21,16 +21,17 @@ const config = {
         try {
             res = JSON.parse(response)
         }catch (err){
-            logException(new Error('接口返回不是一个对象'), res)
+            logException(new Error('接口返回不是一个对象'), err)
         }
         if(typeof res == 'object'){
-            switch(res.status){
+            res.code = parseInt(res.status||res.code);
+            switch(res.code){
                 case 200:
 
                     break;
 
                 default:
-                    logException(new Error(res.status+' 错误'), res)
+                    logException(new Error(res.status||res.code+' 错误'), res)
                     break;
             }
         }
